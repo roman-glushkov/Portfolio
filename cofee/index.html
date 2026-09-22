@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Марс — Кофейня</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #faf6f1;
+        color: #2b1d14;
+        line-height: 1.6;
+      }
+
+      /* Шапка */
+      header {
+        position: sticky;
+        top: 0;
+        background: rgba(250, 246, 241, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid #e8ddd0;
+        z-index: 100;
+        padding: 16px 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: #2b1d14;
+        letter-spacing: -1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo span {
+        color: #d4622a;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: #6b5a4d;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: #d4622a;
+      }
+
+      .phone {
+        font-weight: 700;
+        color: #2b1d14;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      /* Хиро */
+      .hero {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #2b1d14 0%, #4a3425 100%);
+        color: #faf6f1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "☕";
+        position: absolute;
+        font-size: 500px;
+        opacity: 0.05;
+        top: -100px;
+        right: -50px;
+        transform: rotate(-15deg);
+      }
+
+      .hero-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        font-size: 72px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 24px;
+        letter-spacing: -3px;
+      }
+
+      .hero h1 span {
+        color: #d4622a;
+      }
+
+      .hero .rating {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .stars {
+        color: #ffb800;
+        font-size: 24px;
+        letter-spacing: 2px;
+      }
+
+      .rating-text {
+        font-size: 18px;
+        color: #b8a89a;
+      }
+
+      .hero p {
+        font-size: 20px;
+        color: #c8b8a8;
+        margin-bottom: 32px;
+        max-width: 500px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 18px 40px;
+        background: #d4622a;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 18px;
+        transition: transform 0.2s, background 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background: #b8501f;
+        transform: translateY(-2px);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.4);
+        padding: 8px 20px;
+        border-radius: 50px;
+        color: #4ade80;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 24px;
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        background: #22c55e;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* Карточка с инфо */
+      .hero-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 40px;
+        backdrop-filter: blur(20px);
+      }
+
+      .info-item {
+        margin-bottom: 24px;
+      }
+
+      .info-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-label {
+        font-size: 14px;
+        color: #b8a89a;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .info-value {
+        font-size: 20px;
+        font-weight: 600;
+        color: #faf6f1;
+      }
+
+      /* Секции */
+      section {
+        padding: 80px 0;
+      }
+
+      .section-title {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        letter-spacing: -2px;
+      }
+
+      .section-subtitle {
+        font-size: 18px;
+        color: #8b7a6d;
+        margin-bottom: 48px;
+      }
+
+      /* Меню */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .menu-card {
+        background: #fff;
+        border: 1px solid #e8ddd0;
+        border-radius: 20px;
+        padding: 32px;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .menu-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(43, 29, 20, 0.08);
+      }
+
+      .menu-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      .menu-card h3 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .menu-card p {
+        font-size: 15px;
+        color: #8b7a6d;
+        margin-bottom: 16px;
+      }
+
+      .price {
+        font-size: 24px;
+        font-weight: 800;
+        color: #d4622a;
+      }
+
+      /* Отзывы */
+      .reviews {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .review {
+        background: #fff;
+        border: 1px solid #e8ddd0;
+        border-radius: 20px;
+        padding: 32px;
+      }
+
+      .review-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4622a, #ffb800);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .review-name {
+        font-weight: 700;
+        font-size: 17px;
+      }
+
+      .review-stars {
+        color: #ffb800;
+        font-size: 14px;
+      }
+
+      .review-text {
+        color: #4a3425;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* Контакты */
+      .contacts {
+        background: #2b1d14;
+        color: #faf6f1;
+        padding: 80px 0;
+        border-radius: 32px;
+        margin: 0 24px 80px;
+      }
+
+      .contacts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .contacts h2 {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 32px;
+        letter-spacing: -2px;
+      }
+
+      .contact-item {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        align-items: flex-start;
+      }
+
+      .contact-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .contact-text {
+        font-size: 17px;
+        color: #c8b8a8;
+      }
+
+      .contact-text strong {
+        color: #faf6f1;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      /* Футер */
+      footer {
+        text-align: center;
+        padding: 40px 0;
+        color: #8b7a6d;
+        font-size: 14px;
+        border-top: 1px solid #e8ddd0;
+      }
+
+      /* Адаптив */
+      @media (max-width: 900px) {
+        .hero-content,
+        .contacts-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 48px;
+        }
+        .menu-grid,
+        .reviews {
+          grid-template-columns: 1fr;
+        }
+        .section-title {
+          font-size: 36px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .contacts {
+          margin: 0 12px 40px;
+          border-radius: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="logo">
+          М<span>а</span>рс
+          <span style="font-size: 14px; color: #8b7a6d; font-weight: 400"
+            >кофейня</span
+          >
+        </div>
+        <ul class="nav-links">
+          <li><a href="#menu">Меню</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+        <a href="tel:+79371800121" class="phone">+7 937 180-01-21</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container hero-content">
+        <div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            Открыто · до 21:00
+          </div>
+          <h1>Кофейня<br /><span>Марс</span></h1>
+          <div class="rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-text">5.0 · 25 оценок</span>
+          </div>
+          <p>
+            Свежеобжаренный кофе, домашняя выпечка и уютная атмосфера в самом
+            центре Медведево.
+          </p>
+          <a href="#menu" class="btn">Смотреть меню</a>
+        </div>
+
+        <div class="hero-card">
+          <div class="info-item">
+            <div class="info-label">Адрес</div>
+            <div class="info-value">Юбилейная ул., 2/1, киоск</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Город</div>
+            <div class="info-value">пгт Медведево, Республика Марий Эл</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Часы работы</div>
+            <div class="info-value">Ежедневно 08:00 — 21:00</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Телефон</div>
+            <div class="info-value">+7 937 180-01-21</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="container">
+        <h2 class="section-title">Меню</h2>
+        <p class="section-subtitle">Всё свежее, готовим с душой</p>
+        <div class="menu-grid">
+          <div class="menu-card">
+            <div class="menu-icon">☕</div>
+            <h3>Капучино</h3>
+            <p>Классический, с плотной молочной пенкой</p>
+            <div class="price">150 ₽</div>
+          </div>
+          <div class="menu-card">
+            <div class="menu-icon">🥐</div>
+            <h3>Круассан</h3>
+            <p>Слоёный, с маслом и миндалём</p>
+            <div class="price">120 ₽</div>
+          </div>
+          <div class="menu-card">
+            <div class="menu-icon">🍰</div>
+            <h3>Чизкейк</h3>
+            <p>Нежный, с ягодным соусом</p>
+            <div class="price">220 ₽</div>
+          </div>
+          <div class="menu-card">
+            <div class="menu-icon">🥤</div>
+            <h3>Латте</h3>
+            <p>Мягкий, с карамельным сиропом</p>
+            <div class="price">170 ₽</div>
+          </div>
+          <div class="menu-card">
+            <div class="menu-icon">🍵</div>
+            <h3>Матча</h3>
+            <p>Японский зелёный чай с молоком</p>
+            <div class="price">200 ₽</div>
+          </div>
+          <div class="menu-card">
+            <div class="menu-icon">🧁</div>
+            <h3>Маффин</h3>
+            <p>Шоколадный, с вишней</p>
+            <div class="price">130 ₽</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" style="background: #f5ede4">
+      <div class="container">
+        <h2 class="section-title">Отзывы</h2>
+        <p class="section-subtitle">Что говорят наши гости</p>
+        <div class="reviews">
+          <div class="review">
+            <div class="review-header">
+              <div class="avatar">А</div>
+              <div>
+                <div class="review-name">Анна</div>
+                <div class="review-stars">★★★★★</div>
+              </div>
+            </div>
+            <p class="review-text">
+              Лучший капучино в Медведево! Захожу каждое утро по пути на работу.
+            </p>
+          </div>
+          <div class="review">
+            <div class="review-header">
+              <div class="avatar">Д</div>
+              <div>
+                <div class="review-name">Дмитрий</div>
+                <div class="review-stars">★★★★★</div>
+              </div>
+            </div>
+            <p class="review-text">
+              Отличные круассаны и приветливые бариста. Атмосфера уютная, цены
+              адекватные.
+            </p>
+          </div>
+          <div class="review">
+            <div class="review-header">
+              <div class="avatar">Е</div>
+              <div>
+                <div class="review-name">Елена</div>
+                <div class="review-stars">★★★★★</div>
+              </div>
+            </div>
+            <p class="review-text">
+              Заказывала чизкейк на праздник — все были в восторге. Обязательно
+              вернусь ещё!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="contacts" id="contacts">
+      <div class="container contacts-grid">
+        <div>
+          <h2>Контакты</h2>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-text">
+              <strong>Адрес</strong>
+              Юбилейная улица, 2/1, киоск<br />
+              пгт Медведево, 425200
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div class="contact-text">
+              <strong>Телефон</strong>
+              <a
+                href="tel:+79371800121"
+                style="color: #d4622a; text-decoration: none"
+                >+7 937 180-01-21</a
+              >
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🕐</div>
+            <div class="contact-text">
+              <strong>Часы работы</strong>
+              Ежедневно с 08:00 до 21:00
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            style="
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(255, 255, 255, 0.15);
+              border-radius: 24px;
+              padding: 48px;
+              text-align: center;
+            "
+          >
+            <div style="font-size: 72px; margin-bottom: 16px">☕</div>
+            <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 12px">
+              Заходите на кофе
+            </h3>
+            <p style="color: #c8b8a8; font-size: 16px">
+              Ждём вас каждый день с 8 утра
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">© 2026 Кофейня «Марс» · пгт Медведево</div>
+    </footer>
+  </body>
+</html>

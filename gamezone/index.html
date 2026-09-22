@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HARDMODE ZONE — Кибер-арена</title>
+    <style>
+      /* ============ ПЕРЕМЕННЫЕ ============ */
+      :root {
+        --bg: #05030d;
+        --bg-2: #0a0620;
+        --neon: #b026ff;
+        --neon-2: #00e5ff;
+        --neon-3: #ff2bd6;
+        --text: #e8e6ff;
+        --muted: #8a86b8;
+        --glass: rgba(20, 15, 45, 0.55);
+        --glass-border: rgba(176, 38, 255, 0.25);
+        --radius: 20px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ГЛОБАЛЬНО: убираем подчёркивания у ссылок */
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        min-height: 100vh;
+        position: relative;
+        cursor: default;
+      }
+
+      /* ============ ЖИВОЙ ФОН ============ */
+      .bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .bg-gradient {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse at 20% 10%,
+            rgba(176, 38, 255, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 90%,
+            rgba(0, 229, 255, 0.14),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(255, 43, 214, 0.08),
+            transparent 60%
+          ),
+          linear-gradient(180deg, #05030d 0%, #0a0620 50%, #05030d 100%);
+      }
+
+      .bg-grid {
+        position: absolute;
+        inset: -50%;
+        background-image: linear-gradient(
+            rgba(176, 38, 255, 0.07) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        transform: perspective(600px) rotateX(55deg);
+        transform-origin: center 30%;
+        animation: grid-move 25s linear infinite;
+        mask-image: radial-gradient(
+          ellipse at center,
+          #000 20%,
+          transparent 75%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at center,
+          #000 20%,
+          transparent 75%
+        );
+      }
+
+      @keyframes grid-move {
+        from {
+          background-position: 0 0, 0 0;
+        }
+        to {
+          background-position: 0 60px, 60px 0;
+        }
+      }
+
+      .bg-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: 0.55;
+        will-change: transform;
+      }
+
+      .blob-1 {
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          circle,
+          rgba(176, 38, 255, 0.55),
+          transparent 70%
+        );
+        top: -200px;
+        left: -150px;
+        animation: float-1 22s ease-in-out infinite;
+      }
+
+      .blob-2 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 229, 255, 0.45),
+          transparent 70%
+        );
+        bottom: -180px;
+        right: -120px;
+        animation: float-2 26s ease-in-out infinite;
+      }
+
+      .blob-3 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 43, 214, 0.35),
+          transparent 70%
+        );
+        top: 40%;
+        left: 55%;
+        animation: float-3 30s ease-in-out infinite;
+      }
+
+      @keyframes float-1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(120px, 80px) scale(1.15);
+        }
+      }
+      @keyframes float-2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-100px, -60px) scale(1.1);
+        }
+      }
+      @keyframes float-3 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(-80px, 60px) scale(1.2);
+        }
+        66% {
+          transform: translate(60px, -50px) scale(0.95);
+        }
+      }
+
+      .bg-particles {
+        position: absolute;
+        inset: 0;
+      }
+
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: var(--neon-2);
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--neon-2);
+        opacity: 0;
+        animation: rise linear infinite;
+      }
+
+      @keyframes rise {
+        0% {
+          transform: translateY(100vh) scale(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.9;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(-10vh) scale(1.2);
+          opacity: 0;
+        }
+      }
+
+      .bg-noise {
+        position: absolute;
+        inset: 0;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* ============ ОБЁРТКА ============ */
+      .app {
+        position: relative;
+        z-index: 2;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ============ ХЕДЕР ============ */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 18px 0;
+        background: rgba(5, 3, 13, 0.65);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(176, 38, 255, 0.12);
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+        width: 100%;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        line-height: 1;
+      }
+
+      .logo-mark {
+        width: 34px;
+        height: 34px;
+        border: 2px solid var(--neon);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0 18px rgba(176, 38, 255, 0.6),
+          inset 0 0 10px rgba(176, 38, 255, 0.3);
+        color: var(--neon);
+        font-size: 16px;
+      }
+
+      .logo-text span {
+        color: var(--neon-2);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 6px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 10px 16px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: 10px;
+        transition: all 0.25s;
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text);
+        background: rgba(176, 38, 255, 0.12);
+        box-shadow: 0 0 20px rgba(176, 38, 255, 0.25);
+      }
+
+      .nav-links a.active::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 4px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--neon), var(--neon-2));
+        border-radius: 2px;
+        box-shadow: 0 0 10px var(--neon);
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #4ade80;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #22c55e;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      /* ============ СТРАНИЦЫ ============ */
+      .page {
+        display: none;
+        animation: page-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        flex: 1;
+        padding: 60px 0 80px;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      @keyframes page-in {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Hero */
+      .hero {
+        text-align: center;
+        padding: 40px 0 80px;
+      }
+
+      .hero-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border: 1px solid var(--glass-border);
+        border-radius: 50px;
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--neon-2);
+        margin-bottom: 28px;
+        background: rgba(0, 229, 255, 0.05);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.15);
+      }
+
+      .hero h1 {
+        font-size: clamp(48px, 9vw, 120px);
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -3px;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+      }
+
+      .hero h1 .line-1 {
+        background: linear-gradient(
+          135deg,
+          #fff 0%,
+          var(--neon) 60%,
+          var(--neon-3) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 40px rgba(176, 38, 255, 0.5));
+      }
+
+      .hero h1 .line-2 {
+        display: block;
+        background: linear-gradient(
+          135deg,
+          var(--neon-2) 0%,
+          #fff 50%,
+          var(--neon) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 40px rgba(0, 229, 255, 0.4));
+      }
+
+      .hero p {
+        font-size: clamp(16px, 1.6vw, 20px);
+        color: var(--muted);
+        max-width: 620px;
+        margin: 0 auto 40px;
+        line-height: 1.6;
+      }
+
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+      }
+
+      .hero-stat {
+        text-align: center;
+      }
+
+      .hero-stat .num {
+        font-size: 42px;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--neon-2), var(--neon));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+      }
+
+      .hero-stat .lbl {
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      /* Кнопки */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, var(--neon), var(--neon-3));
+        color: #fff;
+        border-radius: 14px;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 0 30px rgba(176, 38, 255, 0.5),
+          0 10px 30px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--neon-2), var(--neon));
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .btn:hover::before {
+        opacity: 1;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 50px rgba(176, 38, 255, 0.8),
+          0 15px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .btn span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--glass-border);
+        color: var(--text);
+        box-shadow: 0 0 20px rgba(176, 38, 255, 0.15);
+      }
+
+      .btn-ghost:hover {
+        background: rgba(176, 38, 255, 0.1);
+      }
+
+      .btn-ghost::before {
+        display: none;
+      }
+
+      /* Секции */
+      section {
+        padding: 60px 0;
+      }
+
+      .section-head {
+        margin-bottom: 40px;
+      }
+
+      .section-label {
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--neon-2);
+        margin-bottom: 12px;
+      }
+
+      .section-title {
+        font-size: clamp(28px, 4vw, 48px);
+        font-weight: 900;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+      }
+
+      .section-desc {
+        color: var(--muted);
+        margin-top: 12px;
+        max-width: 600px;
+        font-size: 16px;
+      }
+
+      /* Стеклянные карточки */
+      .glass {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glass::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--neon),
+          transparent
+        );
+        opacity: 0.6;
+      }
+
+      /* Карточки зон */
+      .zones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .zone-card {
+        padding: 32px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-height: 240px;
+        color: var(--text);
+      }
+
+      .zone-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--neon);
+        box-shadow: 0 30px 80px rgba(176, 38, 255, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .zone-card:hover .zone-icon {
+        transform: scale(1.15) rotate(-5deg);
+        filter: drop-shadow(0 0 20px var(--neon));
+      }
+
+      .zone-icon {
+        font-size: 44px;
+        transition: all 0.4s;
+        display: inline-block;
+        filter: drop-shadow(0 0 10px rgba(176, 38, 255, 0.5));
+      }
+
+      .zone-name {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .zone-desc {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+        flex: 1;
+      }
+
+      .zone-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid rgba(176, 38, 255, 0.15);
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--neon-2);
+      }
+
+      .zone-meta .arrow {
+        transition: transform 0.3s;
+      }
+
+      .zone-card:hover .arrow {
+        transform: translateX(6px);
+      }
+
+      /* Lounge блок */
+      .lounge {
+        padding: 60px 40px;
+        text-align: center;
+        border-radius: var(--radius);
+        margin-top: 20px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 43, 214, 0.15),
+            rgba(0, 229, 255, 0.1)
+          ),
+          var(--glass);
+      }
+
+      .lounge h3 {
+        font-size: clamp(24px, 3vw, 40px);
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+      }
+
+      .lounge p {
+        color: var(--muted);
+        max-width: 500px;
+        margin: 0 auto 28px;
+      }
+
+      .lounge-features {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .lounge-features span {
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--neon-2);
+      }
+
+      /* Страница ZONES */
+      .zone-detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: center;
+        padding: 40px;
+      }
+
+      .zone-detail .big-icon {
+        font-size: 120px;
+        text-align: center;
+        filter: drop-shadow(0 0 40px var(--neon));
+      }
+
+      .zone-detail h2 {
+        font-size: clamp(32px, 4vw, 56px);
+        font-weight: 900;
+        letter-spacing: -2px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #fff, var(--neon-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .zone-detail p {
+        color: var(--muted);
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      .zone-specs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .zone-spec {
+        padding: 12px 16px;
+        background: rgba(176, 38, 255, 0.08);
+        border: 1px solid rgba(176, 38, 255, 0.2);
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--text);
+      }
+
+      /* Цены */
+      .pricing-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .pricing-tab {
+        padding: 12px 24px;
+        background: rgba(176, 38, 255, 0.08);
+        border: 1px solid rgba(176, 38, 255, 0.2);
+        color: var(--muted);
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.25s;
+        font-family: inherit;
+      }
+
+      .pricing-tab:hover {
+        color: var(--text);
+        border-color: var(--neon);
+      }
+
+      .pricing-tab.active {
+        background: linear-gradient(135deg, var(--neon), var(--neon-3));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 0 30px rgba(176, 38, 255, 0.5);
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+
+      .price-card {
+        padding: 32px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .price-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--neon-2);
+        box-shadow: 0 20px 60px rgba(0, 229, 255, 0.25);
+      }
+
+      .price-card .period {
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      .price-card .amount {
+        font-size: 44px;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--neon-2), var(--neon));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .price-card .amount small {
+        font-size: 18px;
+        color: var(--muted);
+        -webkit-text-fill-color: var(--muted);
+        font-weight: 500;
+      }
+
+      .price-card .note {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 20px;
+        min-height: 40px;
+      }
+
+      /* Контакты */
+      .contacts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .contact-item {
+        display: flex;
+        gap: 16px;
+        padding: 24px;
+        align-items: flex-start;
+      }
+
+      .contact-item .icon {
+        font-size: 28px;
+        flex-shrink: 0;
+      }
+
+      .contact-item .label {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      .contact-item .value {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        word-break: break-word;
+      }
+
+      .contact-item a.value:hover {
+        color: var(--neon-2);
+      }
+
+      .socials {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .social-btn {
+        padding: 10px 20px;
+        background: rgba(0, 229, 255, 0.1);
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        color: var(--neon-2);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        transition: all 0.25s;
+      }
+
+      .social-btn:hover {
+        background: rgba(0, 229, 255, 0.2);
+        box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+      }
+
+      .map-placeholder {
+        padding: 60px 40px;
+        text-align: center;
+        min-height: 300px;
+        display: grid;
+        place-items: center;
+      }
+
+      .map-placeholder .pin {
+        font-size: 48px;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 0 20px var(--neon));
+      }
+
+      /* Футер */
+      footer {
+        padding: 32px 0;
+        border-top: 1px solid rgba(176, 38, 255, 0.12);
+        background: rgba(5, 3, 13, 0.6);
+        backdrop-filter: blur(20px);
+        position: relative;
+        z-index: 5;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .footer-inner a:hover {
+        color: var(--neon-2);
+      }
+
+      /* Адаптив */
+      @media (max-width: 900px) {
+        .nav-links {
+          display: none;
+        }
+        .zone-detail,
+        .contacts-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-stats {
+          gap: 24px;
+        }
+        .hero-stat .num {
+          font-size: 30px;
+        }
+        .zone-detail {
+          padding: 24px;
+        }
+        .zone-detail .big-icon {
+          font-size: 72px;
+        }
+      }
+
+      /* Скроллбар */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #05030d;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--neon), var(--neon-2));
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ЖИВОЙ ФОН -->
+    <div class="bg-layer">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="blob-1 bg-blob"></div>
+      <div class="blob-2 bg-blob"></div>
+      <div class="blob-3 bg-blob"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-noise"></div>
+    </div>
+
+    <!-- ПРИЛОЖЕНИЕ -->
+    <div class="app">
+      <!-- ХЕДЕР -->
+      <header>
+        <div class="container nav">
+          <a href="#/" class="logo">
+            <span class="logo-mark">⚡</span>
+            <span class="logo-text">HARDMODE<span>ZONE</span></span>
+          </a>
+          <ul class="nav-links">
+            <li><a href="#/" data-page="home">Главная</a></li>
+            <li><a href="#/zones" data-page="zones">Зоны</a></li>
+            <li><a href="#/pricing" data-page="pricing">Цены</a></li>
+            <li><a href="#/contacts" data-page="contacts">Контакты</a></li>
+          </ul>
+          <div class="status">
+            <span class="status-dot"></span>
+            24/7
+          </div>
+        </div>
+      </header>
+
+      <!-- ГЛАВНАЯ -->
+      <main class="page active" id="page-home">
+        <div class="container">
+          <section class="hero">
+            <div class="hero-badge">Кибер-арена нового поколения</div>
+            <h1>
+              <span class="line-1">HARDMODE</span>
+              <span class="line-2">ZONE</span>
+            </h1>
+            <p>
+              50 игровых ПК, 6 PS5, VIP-зона, bootcamp для команд и lounge с
+              кинотеатром. Работаем 24/7.
+            </p>
+
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <div class="num">50</div>
+                <div class="lbl">ПК</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num">6</div>
+                <div class="lbl">PS5</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num">2</div>
+                <div class="lbl">Bootcamp</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num">VIP</div>
+                <div class="lbl">Зона</div>
+              </div>
+            </div>
+
+            <a href="#/pricing" class="btn"
+              ><span>Забронировать</span><span>→</span></a
+            >
+          </section>
+
+          <section>
+            <div class="section-head">
+              <div class="section-label">Выбери своё</div>
+              <h2 class="section-title">Наши зоны</h2>
+              <p class="section-desc">
+                От мощных ПК до лаунж-зоны с кинотеатром — для игры, тренировок
+                и отдыха.
+              </p>
+            </div>
+
+            <div class="zones-grid">
+              <a href="#/zones" class="zone-card glass">
+                <span class="zone-icon">🖥</span>
+                <div class="zone-name">PC Arena</div>
+                <div class="zone-desc">
+                  50 игровых компьютеров с топовыми видеокартами и мониторами
+                  240 Гц.
+                </div>
+                <div class="zone-meta">
+                  <span>50 ПК</span><span class="arrow">→</span>
+                </div>
+              </a>
+
+              <a href="#/zones" class="zone-card glass">
+                <span class="zone-icon">🎮</span>
+                <div class="zone-name">PS5 Zone</div>
+                <div class="zone-desc">
+                  6 консолей PlayStation 5 с большими 4K-экранами и удобными
+                  диванами.
+                </div>
+                <div class="zone-meta">
+                  <span>6 PS5</span><span class="arrow">→</span>
+                </div>
+              </a>
+
+              <a href="#/zones" class="zone-card glass">
+                <span class="zone-icon">👑</span>
+                <div class="zone-name">VIP Zone</div>
+                <div class="zone-desc">
+                  Отдельная комната с премиальными ПК, своим климатом и звуком.
+                </div>
+                <div class="zone-meta">
+                  <span>Private</span><span class="arrow">→</span>
+                </div>
+              </a>
+
+              <a href="#/zones" class="zone-card glass">
+                <span class="zone-icon">🎯</span>
+                <div class="zone-name">Bootcamp</div>
+                <div class="zone-desc">
+                  2 тренировочные комнаты для команд: 5v5, разборы, scrims.
+                </div>
+                <div class="zone-meta">
+                  <span>2 комнаты</span><span class="arrow">→</span>
+                </div>
+              </a>
+            </div>
+
+            <div class="lounge glass">
+              <h3>Lounge Zone</h3>
+              <p>
+                Отдых между катками: кинотеатр, PS5, диваны, настолки и кофе.
+              </p>
+              <div class="lounge-features">
+                <span>🎬 Кинотеатр</span>
+                <span>🎮 PS5</span>
+                <span>☕ Кофе</span>
+                <span>🛋 Отдых</span>
+              </div>
+              <a href="#/zones" class="btn btn-ghost"
+                ><span>Подробнее</span><span>→</span></a
+              >
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- ЗОНЫ -->
+      <main class="page" id="page-zones">
+        <div class="container">
+          <section>
+            <div class="section-head">
+              <div class="section-label">Explore</div>
+              <h2 class="section-title">Выбери свою зону</h2>
+              <p class="section-desc">
+                Каждая зона — со своим железом, атмосферой и тарифами.
+              </p>
+            </div>
+
+            <div class="glass zone-detail" style="margin-bottom: 24px">
+              <div class="big-icon">🖥</div>
+              <div>
+                <h2>PC Arena</h2>
+                <p>
+                  50 игровых станций: RTX 4070 / i7 / 32GB RAM / мониторы 240
+                  Гц. Идеально для CS2, Dota 2, Valorant, PUBG и любых
+                  AAA-проектов.
+                </p>
+                <div class="zone-specs">
+                  <div class="zone-spec">RTX 4070</div>
+                  <div class="zone-spec">i7 13700</div>
+                  <div class="zone-spec">240 Гц</div>
+                  <div class="zone-spec">32 GB RAM</div>
+                </div>
+                <a href="#/pricing" class="btn"
+                  ><span>Тарифы</span><span>→</span></a
+                >
+              </div>
+            </div>
+
+            <div class="glass zone-detail" style="margin-bottom: 24px">
+              <div class="big-icon">🎮</div>
+              <div>
+                <h2>PS5 Zone</h2>
+                <p>
+                  6 консолей PS5 с 4K-телевизорами, диванами и подборкой топовых
+                  эксклюзивов. FIFA, Mortal Kombat, God of War, Spider-Man и
+                  другие.
+                </p>
+                <div class="zone-specs">
+                  <div class="zone-spec">6 PS5</div>
+                  <div class="zone-spec">4K 120Hz</div>
+                  <div class="zone-spec">Диваны</div>
+                  <div class="zone-spec">Геймпады</div>
+                </div>
+                <a href="#/pricing" class="btn"
+                  ><span>Тарифы</span><span>→</span></a
+                >
+              </div>
+            </div>
+
+            <div class="glass zone-detail" style="margin-bottom: 24px">
+              <div class="big-icon">👑</div>
+              <div>
+                <h2>VIP Zone</h2>
+                <p>
+                  Отдельная комната для 4–6 человек. Премиальные ПК, свой
+                  кондиционер, звук и мини-бар. Для тех, кто хочет без лишних
+                  глаз.
+                </p>
+                <div class="zone-specs">
+                  <div class="zone-spec">Private</div>
+                  <div class="zone-spec">4–6 мест</div>
+                  <div class="zone-spec">Мини-бар</div>
+                  <div class="zone-spec">Premium PC</div>
+                </div>
+                <a href="#/pricing" class="btn"
+                  ><span>Тарифы</span><span>→</span></a
+                >
+              </div>
+            </div>
+
+            <div class="glass zone-detail" style="margin-bottom: 24px">
+              <div class="big-icon">🎯</div>
+              <div>
+                <h2>Bootcamp</h2>
+                <p>
+                  2 тренировочные комнаты для команд: 5 ПК в каждой, доска для
+                  тактики, отдельный звук. Подходит для scrims и разборов.
+                </p>
+                <div class="zone-specs">
+                  <div class="zone-spec">2 комнаты</div>
+                  <div class="zone-spec">5 ПК</div>
+                  <div class="zone-spec">Тактика</div>
+                  <div class="zone-spec">Scrims</div>
+                </div>
+                <a href="#/pricing" class="btn"
+                  ><span>Тарифы</span><span>→</span></a
+                >
+              </div>
+            </div>
+
+            <div class="glass zone-detail">
+              <div class="big-icon">🛋</div>
+              <div>
+                <h2>Lounge Zone</h2>
+                <p>
+                  Кинотеатр, PS5 на большом экране, диваны, настольные игры и
+                  кофе. Место, чтобы отдохнуть между играми или просто провести
+                  вечер.
+                </p>
+                <div class="zone-specs">
+                  <div class="zone-spec">Кинотеатр</div>
+                  <div class="zone-spec">PS5</div>
+                  <div class="zone-spec">Кофе</div>
+                  <div class="zone-spec">Настолки</div>
+                </div>
+                <a href="#/pricing" class="btn"
+                  ><span>Тарифы</span><span>→</span></a
+                >
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- ЦЕНЫ -->
+      <main class="page" id="page-pricing">
+        <div class="container">
+          <section>
+            <div class="section-head" style="text-align: center">
+              <div class="section-label">Play. Compete. Win.</div>
+              <h2 class="section-title">Тарифы</h2>
+              <p class="section-desc" style="margin: 12px auto 0">
+                Выбери зону и время. Цены-заглушки — финальные уточняются при
+                бронировании.
+              </p>
+            </div>
+
+            <div class="pricing-tabs" id="pricingTabs">
+              <button class="pricing-tab active" data-tab="pc">PC Arena</button>
+              <button class="pricing-tab" data-tab="ps5">PS5 Zone</button>
+              <button class="pricing-tab" data-tab="vip">VIP Zone</button>
+              <button class="pricing-tab" data-tab="bootcamp">Bootcamp</button>
+            </div>
+
+            <div class="pricing-grid" id="pricingGrid"></div>
+
+            <div style="text-align: center; margin-top: 48px">
+              <a href="#/contacts" class="btn"
+                ><span>Забронировать</span><span>→</span></a
+              >
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- КОНТАКТЫ -->
+      <main class="page" id="page-contacts">
+        <div class="container">
+          <section>
+            <div class="section-head">
+              <div class="section-label">Find us</div>
+              <h2 class="section-title">Контакты</h2>
+              <p class="section-desc">
+                Работаем круглосуточно. Заходи или звони — забронируем место.
+              </p>
+            </div>
+
+            <div class="contacts-grid">
+              <div class="glass contact-item">
+                <div class="icon">📍</div>
+                <div>
+                  <div class="label">Адрес</div>
+                  <div class="value">Адрес уточняется</div>
+                </div>
+              </div>
+
+              <div class="glass contact-item">
+                <div class="icon">📞</div>
+                <div>
+                  <div class="label">Телефон</div>
+                  <a href="tel:+79026709999" class="value"
+                    >+7 (902) 670-99-99</a
+                  >
+                </div>
+              </div>
+
+              <div class="glass contact-item">
+                <div class="icon">🕐</div>
+                <div>
+                  <div class="label">Режим работы</div>
+                  <div class="value">Круглосуточно, 24/7</div>
+                </div>
+              </div>
+
+              <div class="glass contact-item">
+                <div class="icon">💬</div>
+                <div>
+                  <div class="label">Соцсети</div>
+                  <div class="socials">
+                    <a href="#" class="social-btn">Telegram</a>
+                    <a href="#" class="social-btn">VK</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass map-placeholder" style="margin-top: 24px">
+              <div>
+                <div class="pin">📍</div>
+                <div style="font-size: 18px; font-weight: 700">
+                  HARDMODE ZONE
+                </div>
+                <div style="color: var(--muted); margin-top: 8px">
+                  Карта будет добавлена позже
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- ФУТЕР -->
+      <footer>
+        <div class="container footer-inner">
+          <div>© 2026 HARDMODE ZONE · Кибер-арена</div>
+          <div>
+            <a href="tel:+79026709999">+7 (902) 670-99-99</a> ·
+            <a href="#/contacts">Контакты</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      /* ============ ЧАСТИЦЫ ============ */
+      (function generateParticles() {
+        const container = document.getElementById("particles");
+        const count = 50;
+        for (let i = 0; i < count; i++) {
+          const p = document.createElement("div");
+          p.className = "particle";
+          p.style.left = Math.random() * 100 + "%";
+          p.style.animationDuration = 8 + Math.random() * 12 + "s";
+          p.style.animationDelay = Math.random() * 10 + "s";
+          p.style.opacity = 0.3 + Math.random() * 0.6;
+          const colors = ["#00e5ff", "#b026ff", "#ff2bd6"];
+          p.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+          p.style.boxShadow = "0 0 6px " + p.style.background;
+          container.appendChild(p);
+        }
+      })();
+
+      /* ============ ПАРАЛЛАКС НА МЫШЬ ============ */
+      (function mouseParallax() {
+        const grid = document.querySelector(".bg-grid");
+        const blobs = document.querySelectorAll(".bg-blob");
+        let targetX = 0,
+          targetY = 0,
+          currentX = 0,
+          currentY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+          targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        function animate() {
+          currentX += (targetX - currentX) * 0.06;
+          currentY += (targetY - currentY) * 0.06;
+
+          if (grid) {
+            grid.style.transform = `perspective(600px) rotateX(${
+              55 + currentY * 3
+            }deg) translate(${currentX * 15}px, ${currentY * 15}px)`;
+          }
+
+          blobs.forEach((blob, i) => {
+            const depth = (i + 1) * 12;
+            blob.style.transform = `translate(${currentX * depth}px, ${
+              currentY * depth
+            }px)`;
+          });
+
+          requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+
+      /* ============ РОУТИНГ ============ */
+      const routes = {
+        "": "home",
+        "/": "home",
+        "/zones": "zones",
+        "/pricing": "pricing",
+        "/contacts": "contacts",
+      };
+
+      function navigate() {
+        const hash = window.location.hash.replace("#", "") || "/";
+        const pageId = routes[hash] || "home";
+
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        const target = document.getElementById("page-" + pageId);
+        if (target) {
+          target.classList.add("active");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        document.querySelectorAll(".nav-links a").forEach((a) => {
+          a.classList.toggle("active", a.dataset.page === pageId);
+        });
+      }
+
+      window.addEventListener("hashchange", navigate);
+      window.addEventListener("DOMContentLoaded", () => {
+        navigate();
+        renderPricing("pc");
+      });
+
+      /* ============ ЦЕНЫ ============ */
+      const pricingData = {
+        pc: [
+          { period: "1 час", amount: 150, note: "Стандартное место" },
+          { period: "3 часа", amount: 400, note: "Выгоднее на 50 ₽" },
+          { period: "Ночь (22:00–08:00)", amount: 700, note: 'Пакет "Night"' },
+        ],
+        ps5: [
+          { period: "1 час", amount: 250, note: "До 4 человек" },
+          { period: "3 часа", amount: 650, note: "До 4 человек" },
+          { period: "Ночь", amount: 1100, note: "До 4 человек" },
+        ],
+        vip: [
+          { period: "1 час", amount: 400, note: "Отдельная комната" },
+          { period: "3 часа", amount: 1000, note: "До 6 человек" },
+          { period: "Ночь", amount: 1800, note: "До 6 человек" },
+        ],
+        bootcamp: [
+          { period: "1 час", amount: 800, note: "Вся комната, 5 ПК" },
+          { period: "3 часа", amount: 2000, note: "Вся комната" },
+          { period: "День", amount: 5000, note: "С 10:00 до 22:00" },
+        ],
+      };
+
+      function renderPricing(tab) {
+        const grid = document.getElementById("pricingGrid");
+        const data = pricingData[tab] || [];
+        grid.innerHTML = data
+          .map(
+            (item) => `
+    <div class="price-card glass">
+      <div class="period">${item.period}</div>
+      <div class="amount">${item.amount}<small> ₽</small></div>
+      <div class="note">${item.note}</div>
+      <a href="#/contacts" class="btn btn-ghost" style="padding:12px 24px; font-size:12px;">
+        <span>Book now</span>
+      </a>
+    </div>
+  `
+          )
+          .join("");
+      }
+
+      document.getElementById("pricingTabs").addEventListener("click", (e) => {
+        const btn = e.target.closest(".pricing-tab");
+        if (!btn) return;
+        document
+          .querySelectorAll(".pricing-tab")
+          .forEach((t) => t.classList.remove("active"));
+        btn.classList.add("active");
+        renderPricing(btn.dataset.tab);
+      });
+    </script>
+  </body>
+</html>
