@@ -46,7 +46,7 @@ async function loadProducts() {
         old: Math.round(price * (1 + (Math.random() * 0.15 + 0.05))),
         rating: (4 + Math.random()).toFixed(1),
         reviews: Math.floor(Math.random() * 300) + 20,
-        img: p.image ? String(p.image).split(",")[0] : "",
+        img: p.localImg || "images/placeholder.jpg",
         spec: p.spec || "",
       };
     });
