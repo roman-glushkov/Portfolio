@@ -3,6 +3,11 @@ let products = [];
 let cart = JSON.parse(localStorage.getItem("tm-cart") || "[]");
 let fav = new Set(JSON.parse(localStorage.getItem("tm-fav") || "[]"));
 
+// ================== ПАГИНАЦИЯ ==================
+let currentPage = 1;
+const PER_PAGE = 20;
+let filtered = [];
+
 const $ = (s) => document.querySelector(s);
 const money = (n) => Number(n).toLocaleString("ru-RU") + " ₽";
 
@@ -11,9 +16,9 @@ function parsePrice(v) {
   if (typeof v === "number") return Math.round(v);
   if (typeof v !== "string") return 0;
   const cleaned = v
-    .replace(/\s/g, "") // убираем пробелы (включая неразрывные)
-    .replace(/[^\d.,]/g, "") // убираем всё, кроме цифр, точки и запятой
-    .replace(",", "."); // запятая → точка
+    .replace(/\s/g, "")
+    .replace(/[^\d.,]/g, "")
+    .replace(",", ".");
   const num = parseFloat(cleaned);
   return isNaN(num) ? 0 : Math.round(num);
 }
@@ -29,17 +34,19 @@ async function loadProducts() {
       const price = parsePrice(p.price);
       return {
         id: i + 1,
-        cat: (p.cat || p.category || "Прочее").split(",")[0].trim(),
-        brand: p.brand || "Без бренда",
+        cat: String(p.cat || p.category || "Прочее")
+          .split(",")[0]
+          .trim(),
+        brand: String(p.brand || "Без бренда").trim(),
         name: String(p.name || "Без названия")
           .replace(/^Details About\s+/i, "")
           .replace(/\s+/g, " ")
           .trim(),
         price: price,
-        old: Math.round(price * (1 + (Math.random() * 0.15 + 0.05))), // скидка 5–20%
+        old: Math.round(price * (1 + (Math.random() * 0.15 + 0.05))),
         rating: (4 + Math.random()).toFixed(1),
         reviews: Math.floor(Math.random() * 300) + 20,
-        img: p.image ? p.image.split(",")[0] : "",
+        img: p.image ? String(p.image).split(",")[0] : "",
         spec: p.spec || "",
       };
     });
@@ -52,9 +59,16 @@ async function loadProducts() {
   }
 }
 
-// ================== РЕНДЕР ==================
+// ================== РЕНДЕР ТОВАРОВ ==================
 function render(list = products) {
-  $("#products").innerHTML = list
+  filtered = list;
+  const totalPages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  if (currentPage > totalPages) currentPage = 1;
+
+  const start = (currentPage - 1) * PER_PAGE;
+  const pageItems = list.slice(start, start + PER_PAGE);
+
+  $("#products").innerHTML = pageItems
     .map((p) => {
       const discount =
         p.old > p.price ? Math.round((1 - p.price / p.old) * 100) : 0;
@@ -80,7 +94,63 @@ function render(list = products) {
     `;
     })
     .join("");
+
   $("#result").textContent = `${list.length} товаров`;
+  renderPagination(totalPages);
+}
+
+// ================== РЕНДЕР ПАГИНАЦИИ ==================
+function renderPagination(totalPages) {
+  const box = $("#pagination");
+  if (!box) return;
+
+  const pages = [];
+  const delta = 2;
+
+  pages.push(1);
+
+  if (totalPages <= 7) {
+    for (let i = 2; i <= totalPages; i++) pages.push(i);
+  } else {
+    let left = Math.max(2, currentPage - delta);
+    let right = Math.min(totalPages - 1, currentPage + delta);
+
+    if (currentPage <= 3) {
+      left = 2;
+      right = 5;
+    }
+    if (currentPage >= totalPages - 2) {
+      left = totalPages - 4;
+      right = totalPages - 1;
+    }
+
+    if (left > 2) pages.push("dots-left");
+    for (let i = left; i <= right; i++) pages.push(i);
+    if (right < totalPages - 1) pages.push("dots-right");
+
+    pages.push(totalPages);
+  }
+
+  let html = "";
+  html += `<button data-page="prev" ${
+    currentPage === 1 ? "disabled" : ""
+  }>←</button>`;
+
+  pages.forEach((p) => {
+    if (typeof p === "string" && p.startsWith("dots")) {
+      html += `<span class="dots">…</span>`;
+    } else {
+      html += `<button data-page="${p}" class="${
+        p === currentPage ? "active" : ""
+      }">${p}</button>`;
+    }
+  });
+
+  html += `<button data-page="next" ${
+    currentPage === totalPages ? "disabled" : ""
+  }>→</button>`;
+
+  box.innerHTML = html;
 }
 
 // ================== ФИЛЬТРЫ ==================
@@ -105,6 +175,7 @@ function filters() {
   if (s === "down") list.sort((a, b) => b.price - a.price);
   if (s === "rating") list.sort((a, b) => b.rating - a.rating);
 
+  currentPage = 1;
   render(list);
 }
 
@@ -158,6 +229,21 @@ function openCart() {
 
 // ================== СОБЫТИЯ ==================
 document.addEventListener("click", (e) => {
+  // Пагинация
+  const pageBtn = e.target.closest("[data-page]");
+  if (pageBtn) {
+    const val = pageBtn.dataset.page;
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+
+    if (val === "prev" && currentPage > 1) currentPage--;
+    else if (val === "next" && currentPage < totalPages) currentPage++;
+    else if (!isNaN(+val)) currentPage = +val;
+
+    render(filtered);
+    document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
   const add = e.target.closest("[data-add]");
   if (add) {
     const id = +add.dataset.add;
@@ -172,7 +258,7 @@ document.addEventListener("click", (e) => {
     const id = +heart.dataset.fav;
     fav.has(id) ? fav.delete(id) : fav.add(id);
     save();
-    filters();
+    render(filtered);
   }
 
   const cat = e.target.closest("[data-cat]");
@@ -237,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("#searchBtn").onclick = () => {
     const q = $("#search").value.toLowerCase();
+    currentPage = 1;
     render(
       products.filter((p) =>
         (p.name + p.brand + p.cat).toLowerCase().includes(q)
