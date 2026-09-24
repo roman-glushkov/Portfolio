@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ТехноМаркет — электроника</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="top wrap">
+        <a class="logo"><b>Т</b>ехноМаркет</a
+        ><button id="catBtn">☰ Все категории</button>
+        <div class="search">
+          <input
+            id="search"
+            placeholder="Искать товары, бренды и категории"
+          /><button id="searchBtn">⌕</button>
+        </div>
+        <nav>
+          <button id="fav">♡<small>Избранное</small></button
+          ><button>◯<small>Профиль</small></button
+          ><button id="cart">
+            🛒<i id="count">0</i><small>Корзина</small>
+          </button>
+        </nav>
+      </div>
+      <div class="bar">
+        <div class="wrap">
+          <a data-cat="Аксессуары для ПК">🖥 Аксессуары для ПК</a
+          ><a data-cat="Колонки">🔊 Колонки</a
+          ><a data-cat="Электроника">🔌 Электроника</a
+          ><a data-cat="Телевизоры">📺 Телевизоры</a
+          ><a data-cat="Автоэлектроника">🚗 Автоэлектроника</a
+          ><a data-cat="Наушники">🎧 Наушники</a
+          ><a data-cat="Аксессуары">🎒 Аксессуары</a
+          ><a data-cat="Камеры и фото">📷 Камеры и фото</a
+          ><a data-cat="Домашний кинотеатр">🎬 Домашний кинотеатр</a
+          ><a data-cat="Комплектующие">⚙️ Комплектующие</a
+          ><a data-cat="Ноутбуки и ПК">💻 Ноутбуки и ПК</a
+          ><a data-cat="Умный дом и гаджеты">🏠 Умный дом и гаджеты</a
+          ><a data-cat="Игровые консоли">🎮 Игровые консоли</a
+          ><a data-cat="Проекторы и экраны">📽 Проекторы и экраны</a
+          ><a data-cat="Смартфоны и планшеты">📱 Смартфоны и планшеты</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="hero wrap">
+        <div class="heroMain">
+          <div class="heroText">
+            <label>⚡ БОЛЬШАЯ РАСПРОДАЖА</label>
+            <h1>Техника,<br /><strong>которая нравится.</strong></h1>
+            <p>
+              Компьютеры, аудио, телевизоры и аксессуары. Доставка и гарантия на
+              каждый товар.
+            </p>
+            <button class="primary" data-go="catalog">Смотреть товары →</button>
+            <div class="trust">
+              ✓ Официальная гарантия　 ✓ Доставка от 1 дня
+            </div>
+          </div>
+          <img src="images/hero.jpg" alt="Электроника" />
+        </div>
+        <div class="promos">
+          <div>
+            <b>−20%</b><span>на аксессуары</span
+            ><small>при покупке от 5 000 ₽</small>
+          </div>
+          <div><b>0%</b><span>рассрочка</span><small>до 12 месяцев</small></div>
+          <div>
+            <b>24/7</b><span>заказ онлайн</span
+            ><small>принимаем круглосуточно</small>
+          </div>
+        </div>
+      </section>
+      <section class="section white">
+        <div class="wrap">
+          <div class="title">
+            <div>
+              <small>КАТЕГОРИИ</small>
+              <h2>Выбирайте по интересам</h2>
+            </div>
+            <a data-go="catalog">Все категории →</a>
+          </div>
+          <div class="cats">
+            <button data-cat="Аксессуары для ПК">
+              <img src="images/cat-laptop.jpg" /><b>Аксессуары для ПК</b
+              ><small>от 490 ₽</small></button
+            ><button data-cat="Колонки">
+              <img src="images/cat-audio.jpg" /><b>Колонки</b
+              ><small>от 2 490 ₽</small></button
+            ><button data-cat="Телевизоры">
+              <img src="images/cat-tv.jpg" /><b>Телевизоры</b
+              ><small>от 29 990 ₽</small></button
+            ><button data-cat="Наушники">
+              <img src="images/cat-audio.jpg" /><b>Наушники</b
+              ><small>от 1 990 ₽</small></button
+            ><button data-cat="Смартфоны и планшеты">
+              <img src="images/cat-phone.jpg" /><b>Смартфоны и планшеты</b
+              ><small>от 9 990 ₽</small></button
+            ><button data-cat="Игровые консоли">
+              <img src="images/cat-watch.jpg" /><b>Игровые консоли</b
+              ><small>от 14 990 ₽</small>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="section" id="catalog">
+        <div class="wrap">
+          <div class="title">
+            <div>
+              <small>КАТАЛОГ</small>
+              <h2>Популярные товары</h2>
+              <p id="result">1247 товаров</p>
+            </div>
+            <select id="sort">
+              <option value="popular">По популярности</option>
+              <option value="up">Сначала дешевле</option>
+              <option value="down">Сначала дороже</option>
+              <option value="rating">По рейтингу</option>
+            </select>
+          </div>
+          <div class="layout">
+            <aside class="filters">
+              <div class="filterTop">
+                <b>Фильтры</b><button id="clear">Сбросить</button>
+              </div>
+              <fieldset>
+                <legend>Категория</legend>
+                <label
+                  ><input
+                    class="cf"
+                    value="Аксессуары для ПК"
+                    type="checkbox"
+                  />
+                  Аксессуары для ПК</label
+                >
+                <label
+                  ><input class="cf" value="Колонки" type="checkbox" />
+                  Колонки</label
+                >
+                <label
+                  ><input class="cf" value="Электроника" type="checkbox" />
+                  Электроника</label
+                >
+                <label
+                  ><input class="cf" value="Телевизоры" type="checkbox" />
+                  Телевизоры</label
+                >
+                <label
+                  ><input class="cf" value="Автоэлектроника" type="checkbox" />
+                  Автоэлектроника</label
+                >
+                <label
+                  ><input class="cf" value="Наушники" type="checkbox" />
+                  Наушники</label
+                >
+                <label
+                  ><input class="cf" value="Аксессуары" type="checkbox" />
+                  Аксессуары</label
+                >
+                <label
+                  ><input class="cf" value="Камеры и фото" type="checkbox" />
+                  Камеры и фото</label
+                >
+                <label
+                  ><input
+                    class="cf"
+                    value="Домашний кинотеатр"
+                    type="checkbox"
+                  />
+                  Домашний кинотеатр</label
+                >
+                <label
+                  ><input class="cf" value="Комплектующие" type="checkbox" />
+                  Комплектующие</label
+                >
+                <label
+                  ><input class="cf" value="Ноутбуки и ПК" type="checkbox" />
+                  Ноутбуки и ПК</label
+                >
+                <label
+                  ><input
+                    class="cf"
+                    value="Умный дом и гаджеты"
+                    type="checkbox"
+                  />
+                  Умный дом и гаджеты</label
+                >
+                <label
+                  ><input class="cf" value="Игровые консоли" type="checkbox" />
+                  Игровые консоли</label
+                >
+                <label
+                  ><input
+                    class="cf"
+                    value="Проекторы и экраны"
+                    type="checkbox"
+                  />
+                  Проекторы и экраны</label
+                >
+                <label
+                  ><input
+                    class="cf"
+                    value="Смартфоны и планшеты"
+                    type="checkbox"
+                  />
+                  Смартфоны и планшеты</label
+                >
+              </fieldset>
+              <fieldset>
+                <legend>Цена</legend>
+                <div class="prices">
+                  <input id="min" type="number" placeholder="От" /><input
+                    id="max"
+                    type="number"
+                    placeholder="До"
+                  />
+                </div>
+                <input
+                  id="range"
+                  type="range"
+                  min="490"
+                  max="160000"
+                  value="160000"
+                />
+              </fieldset>
+              <fieldset>
+                <legend>Рейтинг</legend>
+                <label
+                  ><input name="rating" type="radio" value="4.8" /> ★ 4.8 и
+                  выше</label
+                ><label
+                  ><input name="rating" type="radio" value="4.5" /> ★ 4.5 и
+                  выше</label
+                ><label
+                  ><input name="rating" type="radio" value="4" /> ★ 4.0 и
+                  выше</label
+                >
+              </fieldset>
+              <fieldset>
+                <legend>Бренд</legend>
+                <label
+                  ><input class="bf" value="Sony" type="checkbox" /> Sony</label
+                ><label
+                  ><input class="bf" value="Samsung" type="checkbox" />
+                  Samsung</label
+                ><label
+                  ><input class="bf" value="Bose" type="checkbox" /> Bose</label
+                ><label
+                  ><input class="bf" value="Corsair" type="checkbox" />
+                  Corsair</label
+                ><label
+                  ><input class="bf" value="Kenwood" type="checkbox" />
+                  Kenwood</label
+                >
+              </fieldset>
+            </aside>
+            <div class="products" id="products"></div>
+          </div>
+        </div>
+      </section>
+      <section class="section white">
+        <div class="wrap">
+          <div class="deal">
+            <div>
+              <small>ТОЛЬКО ЭТОЙ НЕДЕЛЕ</small>
+              <h2>Соберите комплект<br />для работы и отдыха</h2>
+              <p>Компьютер + монитор + аксессуары со специальной ценой.</p>
+              <button class="primary" data-go="catalog">Выбрать технику</button>
+            </div>
+            <img src="images/deal.jpg" alt="Комплект техники" />
+          </div>
+        </div>
+      </section>
+      <section class="section white">
+        <div class="wrap">
+          <div class="title">
+            <div>
+              <small>ПОЧЕМУ МЫ</small>
+              <h2>Покупать технику — просто</h2>
+            </div>
+          </div>
+          <div class="benefits">
+            <article>
+              🚚<b>Быстрая доставка</b>
+              <p>Привезём заказ по городу и отправим в другие регионы.</p>
+            </article>
+            <article>
+              🛡️<b>Гарантия</b>
+              <p>Официальная гарантия и проверка техники перед отправкой.</p>
+            </article>
+            <article>
+              ↩️<b>14 дней на возврат</b>
+              <p>Поможем оформить возврат и обмен в рамках закона.</p>
+            </article>
+            <article>
+              💬<b>Поддержка</b>
+              <p>Ответим на вопросы о характеристиках и совместимости.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="modal" id="modal">
+      <div class="modalBox">
+        <button class="close">×</button>
+        <h2>Корзина</h2>
+        <div id="cartItems"></div>
+        <div class="total"><span>Итого</span><b id="total">0 ₽</b></div>
+        <button class="checkout" id="checkout">Оформить заказ</button>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <footer>
+      <div class="wrap footer">
+        <div>
+          <a class="logo"><b>Т</b>ехноМаркет</a>
+        </div>
+        <div>
+          <strong>Покупателям</strong><span>Доставка</span><span>Оплата</span
+          ><span>Возврат</span>
+        </div>
+        <div>
+          <strong>Компания</strong><span>О магазине</span><span>Контакты</span
+          ><span>Вакансии</span>
+        </div>
+        <div>
+          <strong>Поддержка</strong><b>8 800 555-35-35</b
+          ><span>Ежедневно 9:00–22:00</span>
+        </div>
+      </div>
+      <div class="copy">© 2026 ТехноМаркет. Демонстрационный проект.</div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
