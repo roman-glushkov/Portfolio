@@ -1,0 +1,32 @@
+[
+  {
+    "image": "images/t1.jpg",
+    "date": "13 сентября · Йошкар-Ола",
+    "title": "Кубок Содружества",
+    "subtitle": "Пляжный футбол · мужские команды",
+    "tag": "⚽ Футбол",
+    "linkText": "Результаты →",
+    "linkHref": "#live",
+    "sport": "football"
+  },
+  {
+    "image": "images/t2.jpg",
+    "date": "13 сентября · Йошкар-Ола",
+    "title": "Фестиваль по пляжному футболу",
+    "subtitle": "Пляжный футбол · мужские команды",
+    "tag": "⚽ Футбол",
+    "linkText": "125 фото →",
+    "linkHref": "#gallery",
+    "sport": "football"
+  },
+  {
+    "image": "images/t3.jpg",
+    "date": "29 августа · Йошкар-Ола",
+    "title": "«Дружба народов России»",
+    "subtitle": "Пляжный волейбол · юношеские команды",
+    "tag": "🏐 Волейбол",
+    "linkText": "90 фото →",
+    "linkHref": "#gallery",
+    "sport": "volleyball"
+  }
+]

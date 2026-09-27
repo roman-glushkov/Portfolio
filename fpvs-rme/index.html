@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ФПВС РМЭ — спорт на пляже</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/png" href="images/logo.jpg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="top">
+      <div>Федерация пляжных видов спорта Республики Марий Эл</div>
+      <div>Йошкар-Ола · сезон 2026</div>
+    </div>
+
+    <header>
+      <div class="head wrap">
+        <a class="brand" href="#home">
+          <img class="brand-logo" src="images/logo.jpg" alt="ФПВС РМЭ" />
+          <span><b>ФПВС</b><small>Республика Марий Эл</small></span>
+        </a>
+        <nav id="nav">
+          <a href="#news">Новости</a>
+          <a href="#tournaments">Турниры</a>
+          <a href="#calendar">Календарь</a>
+          <a href="#live">Онлайн</a>
+          <a href="#gallery">Фото</a>
+          <a href="#about">О федерации</a>
+        </nav>
+        <a class="contact" href="#contacts">Связаться</a>
+        <button class="burger" id="burger">☰</button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-shade"></div>
+        <div class="wrap hero-in">
+          <span class="pill">🏐 ⚽ ПЛЯЖНЫЙ СПОРТ · ЙОШКАР-ОЛА</span>
+          <h1>Спорт.<br /><em>Пляж. Команда.</em></h1>
+          <p>
+            Объединяем спортсменов, проводим турниры и развиваем пляжные виды
+            спорта в Республике Марий Эл.
+          </p>
+          <div class="actions">
+            <a class="btn orange" href="#tournaments">Ближайшие турниры</a>
+            <a class="btn glass" href="#gallery">Смотреть фотографии</a>
+          </div>
+          <div class="stats" id="heroStats">
+            <span><b id="statPhotos">—</b>фотографий</span>
+            <span><b id="statFounded">—</b>год создания</span>
+            <span><b id="statSports">—</b>вида спорта</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="ticker">
+        <div>
+          🏆 ТУРНИРЫ　 <b>Кубок Содружества</b>　 ·　 🏐 ВОЛЕЙБОЛ　
+          <b>Сезон 2026</b>　 ·　 ⚽ ФУТБОЛ　 <b>Пляжный сезон</b>　 ·　 📸
+          <b>Новые фото после турниров</b>
+        </div>
+      </div>
+
+      <!-- НОВОСТИ -->
+      <section class="section white" id="news">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <small>ЛЕНТА ФЕДЕРАЦИИ</small>
+              <h2>Недавние события</h2>
+            </div>
+            <a href="#calendar">Календарь →</a>
+          </div>
+          <div class="news" id="newsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ТУРНИРЫ -->
+      <section class="section" id="tournaments">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <small>СОРЕВНОВАНИЯ</small>
+              <h2>Турниры федерации</h2>
+            </div>
+            <a href="#calendar">Календарь →</a>
+          </div>
+          <div class="cards" id="tournamentsGrid"></div>
+        </div>
+      </section>
+
+      <!-- КАЛЕНДАРЬ -->
+      <section class="section white" id="calendar">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <small>НЕ ПРОПУСТИТЬ</small>
+              <h2>Календарь мероприятий</h2>
+            </div>
+            <button
+              class="select"
+              onclick="toast('Фильтр по сезону — следующий этап')"
+            >
+              2026 · Все события⌄
+            </button>
+          </div>
+          <div class="events" id="calendarList"></div>
+        </div>
+      </section>
+
+      <!-- ОНЛАЙН СЕТКА -->
+      <section class="section dark" id="live">
+        <div class="wrap">
+          <div class="live-head">
+            <div>
+              <small>ПРЯМО СЕЙЧАС</small>
+              <h2>Онлайн-турнир</h2>
+              <p>
+                В будущем здесь можно следить за сеткой, результатами и текущими
+                матчами без перехода в VK.
+              </p>
+            </div>
+            <b>● LIVE</b>
+          </div>
+          <div class="tabs">
+            <button class="active" onclick="bracket('v',this)">
+              🏐 Волейбол
+            </button>
+            <button onclick="bracket('f',this)">⚽ Футбол</button>
+          </div>
+          <div class="bracket" id="bracket">
+            <div>
+              <small>1/4 ФИНАЛА</small>
+              <p>Команда «Марий Эл» <b>21</b></p>
+              <p>«Оазис» <b>17</b></p>
+              <p>«Волна» <b>21</b></p>
+              <p>«Берег» <b>19</b></p>
+            </div>
+            <div>
+              <small>1/2 ФИНАЛА</small>
+              <p class="live">Победитель 1 <b>LIVE</b></p>
+              <p>Победитель 2 <b>—</b></p>
+              <p>Победитель 3 <b>—</b></p>
+            </div>
+            <div class="final">
+              <small>ФИНАЛ</small>
+              <strong>🏆</strong><b>Финал</b>
+              <span>Матч ещё не начался</span>
+            </div>
+          </div>
+          <p class="note">
+            Демонстрационная сетка. В рабочей версии администратор сможет менять
+            пары и счёт, а зрители будут видеть обновления сразу.
+          </p>
+        </div>
+      </section>
+
+      <!-- ФОТО -->
+      <section class="section white" id="gallery">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <small><span id="galleryTotal">0</span> ФОТОГРАФИЙ</small>
+              <h2>Большая лента с пляжа</h2>
+              <p>Альбомы после каждого турнира и лучшие моменты сезона.</p>
+            </div>
+            <button
+              class="select"
+              onclick="toast('Полный архив альбомов — следующий этап')"
+            >
+              Все альбомы →
+            </button>
+          </div>
+
+          <div class="album-chips" id="albumChips"></div>
+          <div class="gallery" id="galleryGrid"></div>
+        </div>
+      </section>
+
+      <!-- О ФЕДЕРАЦИИ -->
+      <section class="section people" id="about">
+        <div class="wrap people-grid">
+          <div class="portrait">
+            <img src="images/sergey.jpg" />
+            <span>
+              <b>Сергей Канашин</b>
+              <small>Председатель РОСО «ФПВС РМЭ»</small>
+            </span>
+          </div>
+          <div>
+            <small class="orange-text">ЛЮДИ ФЕДЕРАЦИИ</small>
+            <h2>Команда, которая двигает пляжный спорт</h2>
+            <p>
+              Федерация пляжных видов спорта Республики Марий Эл развивает
+              пляжный волейбол и пляжный футбол, проводит соревнования,
+              фестивали и мастер-классы.
+            </p>
+            <p>
+              За каждым турниром стоят организаторы, судьи, фотографы,
+              волонтёры, партнёры и спортсмены. Здесь можно постепенно собрать
+              истории команды и отдельные страницы сотрудников.
+            </p>
+            <div class="team">
+              <div>
+                <b>Сергей Канашин</b><small>Председатель федерации</small>
+              </div>
+              <div><b>Эльвира Бочарова</b><small>Администратор</small></div>
+              <div>
+                <b>Команда ФПВС</b><small>Организация соревнований</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ПАРТНЁРЫ -->
+      <section class="section white">
+        <div class="wrap support">
+          <div>
+            <small>РАЗВИТИЕ СПОРТА</small>
+            <h2>Вместе делаем спорт доступнее</h2>
+            <p>
+              Федерация благодарит партнёров и организации, которые помогают
+              проводить соревнования на достойном уровне.
+            </p>
+            <a class="btn darkbtn" href="#contacts">Стать партнёром →</a>
+          </div>
+          <div class="support-items">
+            <span>⚽ Мячи для пляжного футбола</span>
+            <span>🏐 Волейбольные сетки</span>
+            <span>🥅 Футбольные сетки</span>
+            <span>⛱ Навесы и зоны отдыха</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- КОНТАКТЫ -->
+      <section class="section" id="contacts">
+        <div class="wrap contacts">
+          <div>
+            <small>КОНТАКТЫ</small>
+            <h2>Давайте развивать спорт вместе</h2>
+            <div class="contact-list">
+              <div>
+                <small>Председатель</small><b>Сергей Канашин</b>
+                <a href="tel:+79177103440">+7 (917) 710-34-40</a>
+              </div>
+              <div>
+                <small>Федерация</small><b>+7 (902) 103-28-78</b>
+                <a href="mailto:mari12fpvs@mail.ru">mari12fpvs@mail.ru</a>
+              </div>
+              <div>
+                <small>Адрес</small><b>Йошкар-Ола, Ленинский пр-кт, д. 15д</b>
+                <span>Пн–Пт · 9:00–17:00</span>
+              </div>
+            </div>
+          </div>
+          <form id="form">
+            <h3>Написать федерации</h3>
+            <input required placeholder="Ваше имя" />
+            <input required type="tel" placeholder="Телефон" />
+            <select>
+              <option>Хочу узнать о турнире</option>
+              <option>Хочу принять участие</option>
+              <option>Хочу стать партнёром</option>
+              <option>Другой вопрос</option>
+            </select>
+            <textarea placeholder="Сообщение"></textarea>
+            <button class="btn orange">Отправить</button>
+            <small>
+              Демонстрационная форма — подключение почты/CRM добавляется
+              отдельно.
+            </small>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap foot">
+        <div>
+          <a class="brand" href="#home">
+            <img class="brand-logo" src="images/logo.jpg" alt="ФПВС РМЭ" />
+            <span><b>ФПВС</b><small>Республика Марий Эл</small></span>
+          </a>
+          <p>Пляжный спорт в Марий Эл.<br />Волейбол · футбол · люди.</p>
+        </div>
+        <div>
+          <b>Навигация</b>
+          <a href="#news">Новости</a>
+          <a href="#tournaments">Турниры</a>
+          <a href="#calendar">Календарь</a>
+          <a href="#gallery">Фото</a>
+        </div>
+        <div>
+          <b>Контакты</b>
+          <a href="mailto:mari12fpvs@mail.ru">mari12fpvs@mail.ru</a>
+          <a href="tel:+79021032878">+7 (902) 103-28-78</a>
+          <span>Пн–Пт · 9:00–17:00</span>
+        </div>
+      </div>
+      <div class="copy">
+        © 2026 РОСО «ФПВС РМЭ» · ИНН 1215225510 · ОГРН 1181215005377
+      </div>
+    </footer>
+
+    <!-- МОДАЛКА-ПОСТ -->
+    <div class="post-modal" id="postModal" aria-hidden="true">
+      <div class="post-modal__backdrop" data-post-close></div>
+      <article class="post-modal__card">
+        <button class="post-modal__close" data-post-close aria-label="Закрыть">
+          ✕
+        </button>
+        <header class="post-modal__head">
+          <label class="post-modal__tag" id="pmTag"></label>
+          <h2 class="post-modal__title" id="pmTitle"></h2>
+          <span class="post-modal__date" id="pmDate"></span>
+        </header>
+        <div class="post-modal__body" id="pmBody"></div>
+        <div class="post-modal__gallery" id="pmGallery"></div>
+      </article>
+    </div>
+
+    <!-- ЛАЙТБОКС -->
+    <div class="lightbox" id="lightbox">
+      <button class="lb-close" aria-label="Закрыть">✕</button>
+      <button class="lb-prev" aria-label="Назад">‹</button>
+      <img class="lb-img" src="" alt="" />
+      <button class="lb-next" aria-label="Вперёд">›</button>
+      <span class="lb-counter"></span>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
