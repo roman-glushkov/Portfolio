@@ -226,7 +226,7 @@ function renderAlbums() {
     (album.photos || []).map((photo) => ({
       src: `${album.folder}/${photo}`,
       albumTitle: album.title,
-      date: album.date,
+      date: album.tournamentDate,
     }))
   );
 
@@ -247,7 +247,11 @@ function renderAlbums() {
     .join("");
 
   grid.querySelectorAll("figure").forEach((fig) => {
-    fig.onclick = () => openLightbox(visible, parseInt(fig.dataset.index, 10));
+    const idx = parseInt(fig.dataset.index, 10);
+    fig.onclick = () => {
+      const album = ALBUMS.find((a) => a.title === visible[idx].albumTitle);
+      if (album) showAlbum(album);
+    };
   });
 
   const totalEl = $("#galleryTotal");
@@ -264,7 +268,9 @@ function renderAlbumChips() {
     (a) => `
       <span class="chip" data-folder="${a.folder}">
         <b>${a.title}</b>
-        <small>${formatDate(a.date)} · ${a.photos.length} фото</small>
+        <small>Турнир: ${formatDate(a.tournamentDate)} · ${
+      a.photos.length
+    } фото</small>
       </span>`
   ).join("");
 
@@ -272,14 +278,60 @@ function renderAlbumChips() {
     chip.onclick = () => {
       const album = ALBUMS.find((a) => a.folder === chip.dataset.folder);
       if (!album) return;
-      const photos = album.photos.map((p) => ({
-        src: `${album.folder}/${p}`,
-        albumTitle: album.title,
-        date: album.date,
-      }));
-      openLightbox(photos, 0);
+      showAlbum(album);
     };
   });
+}
+
+function showAlbum(album) {
+  if (!album) return;
+  const modal = document.getElementById("albumModal");
+  if (!modal) return;
+
+  document.getElementById("amTitle").textContent = album.title;
+  document.getElementById("amMeta").textContent = `Турнир: ${formatDate(
+    album.tournamentDate
+  )} · ${album.photos.length} фото`;
+
+  const photos = album.photos.map((p) => ({
+    src: `${album.folder}/${p}`,
+    albumTitle: album.title,
+    date: album.tournamentDate,
+  }));
+
+  const grid = document.getElementById("amGrid");
+  grid.innerHTML = photos
+    .map(
+      (p, i) => `
+      <figure data-photo-index="${i}">
+        <img src="${p.src}" alt="" loading="lazy">
+      </figure>`
+    )
+    .join("");
+
+  grid.querySelectorAll("figure").forEach((fig) => {
+    fig.style.cursor = "zoom-in";
+    fig.onclick = () => {
+      const idx = parseInt(fig.dataset.photoIndex, 10) || 0;
+      openLightbox(photos, idx);
+    };
+  });
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+
+  modal.querySelectorAll("[data-album-close]").forEach((el) => {
+    el.onclick = closeAlbumModal;
+  });
+}
+
+function closeAlbumModal() {
+  const modal = document.getElementById("albumModal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
 }
 
 /* ================================================================
@@ -410,22 +462,39 @@ async function loadNews() {
 
 function renderNewsCard(n, isFeatured) {
   const photos = Array.isArray(n.gallery) ? n.gallery.filter(Boolean) : [];
-  const collage = photos.length
-    ? `<div class="news-collage news-collage--${Math.min(
-        photos.length,
-        5
-      )}">${renderCollage(photos, n.id)}</div>`
-    : "";
+
+  // Главная карточка — ВК-коллаж + текст
+  if (isFeatured) {
+    const collage = photos.length
+      ? `<div class="news-collage news-collage--${Math.min(
+          photos.length,
+          5
+        )}">${renderCollage(photos, n.id)}</div>`
+      : "";
+    return `
+      <article class="main-post news-card" data-news-id="${n.id}">
+        ${collage}
+        <div class="news-card__text">
+          <label>${formatNewsDate(n)} · ${n.tag}</label>
+          <h3>${n.title}</h3>
+          <p>${n.excerpt || ""}</p>
+          <a href="#" data-news-open="${n.id}">Подробнее →</a>
+        </div>
+      </article>
+    `;
+  }
+
+  // Боковая карточка — превьюшка + текст
+  const thumb = photos.length
+    ? `<img class="side-thumb" src="${photos[0]}" alt="" loading="lazy">`
+    : `<div class="side-thumb side-thumb--empty"></div>`;
 
   return `
-    <article class="${isFeatured ? "main-post" : ""} news-card" data-news-id="${
-    n.id
-  }">
-      ${collage}
-      <div>
+    <article class="side-card news-card" data-news-id="${n.id}">
+      ${thumb}
+      <div class="side-card__text">
         <label>${formatNewsDate(n)} · ${n.tag}</label>
         <h3>${n.title}</h3>
-        <p>${n.excerpt || ""}</p>
         <a href="#" data-news-open="${n.id}">Подробнее →</a>
       </div>
     </article>
@@ -599,14 +668,22 @@ window.addEventListener("DOMContentLoaded", async () => {
   loadCalendar();
   loadNews();
 
-  // Esc — закрывает лайтбокс или модалку
+  // Esc — закрывает лайтбокс, модалку альбома или модалку-пост
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
+
     const lb = document.getElementById("lightbox");
     if (lb?.classList.contains("open")) {
       closeLightbox();
       return;
     }
+
+    const albumModal = document.getElementById("albumModal");
+    if (albumModal?.classList.contains("open")) {
+      closeAlbumModal();
+      return;
+    }
+
     const modal = document.getElementById("postModal");
     if (modal?.classList.contains("open")) closePostModal();
   });

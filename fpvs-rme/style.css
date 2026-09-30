@@ -282,7 +282,7 @@ header {
   border-radius: 15px;
   overflow: hidden;
 }
-.main-post > div {
+.news-card__text {
   padding: 24px;
 }
 .main-post label,
@@ -312,18 +312,59 @@ header {
   display: grid;
   gap: 20px;
 }
-.side article {
+
+.side-card {
   background: #f2f3ef;
   border-radius: 15px;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 42% 58%;
+  grid-template-columns: 50% 50%;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.side article > div {
-  padding: 20px;
+.side-card:hover {
+  background: #ede7dd;
 }
-.side h3 {
-  font: 700 17px/1.25 Manrope;
+
+.side-thumb {
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  object-fit: cover;
+  display: block;
+  background: #e2e7e2;
+}
+.side-thumb--empty {
+  background: #e6e9e6;
+}
+
+.side-card__text {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+.side-card__text label {
+  font-size: 9px;
+  color: #df6a30;
+  font-weight: 800;
+}
+.side-card__text h3 {
+  font: 700 15px/1.25 Manrope, sans-serif;
+  color: #142a2b;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.side-card__text a {
+  font-size: 10px;
+  color: #df6a30;
+  font-weight: 800;
+  margin-top: 4px;
 }
 
 /* ================================================================
@@ -895,6 +936,19 @@ footer {
   object-fit: cover;
   display: block;
 }
+
+/* Главная карточка — коллаж компактнее, чтобы текст влезал */
+.main-post .news-collage--4,
+.main-post .news-collage--5 {
+  grid-template-rows: 160px 160px;
+}
+.main-post .news-collage--1,
+.main-post .news-collage--2 {
+  grid-auto-rows: 280px;
+}
+.main-post .news-collage--3 {
+  grid-template-rows: 140px 140px;
+}
 .collage-more {
   position: absolute;
   inset: 0;
@@ -1171,4 +1225,113 @@ footer {
   color: #e8ece9;
   font-size: 12px;
   letter-spacing: 0.5px;
+}
+
+/* ================================================================
+ *  МОДАЛКА АЛЬБОМА
+ * ================================================================ */
+
+.album-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: none;
+}
+.album-modal.open {
+  display: block;
+}
+
+.album-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 30, 30, 0.75);
+  backdrop-filter: blur(3px);
+}
+
+.album-modal__card {
+  position: relative;
+  max-width: 1100px;
+  width: calc(100% - 40px);
+  max-height: 90vh;
+  margin: 5vh auto 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: pm-rise 0.25s ease;
+}
+
+.album-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(20, 42, 43, 0.08);
+  color: #142a2b;
+  font-size: 18px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.album-modal__close:hover {
+  background: rgba(20, 42, 43, 0.18);
+}
+
+.album-modal__head {
+  padding: 28px 68px 8px 32px;
+}
+.album-modal__title {
+  font: 800 26px/1.2 Manrope, sans-serif;
+  letter-spacing: -0.6px;
+  color: #142a2b;
+  margin: 0 0 6px;
+}
+.album-modal__meta {
+  font-size: 11px;
+  color: #89938f;
+}
+
+.album-modal__grid {
+  padding: 16px 32px 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+}
+.album-modal__grid figure {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #e6e9e6;
+  cursor: zoom-in;
+}
+.album-modal__grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: 0.3s;
+}
+.album-modal__grid figure:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 650px) {
+  .album-modal__card {
+    width: calc(100% - 20px);
+    margin: 4vh auto 0;
+    max-height: 92vh;
+  }
+  .album-modal__head {
+    padding: 22px 56px 6px 20px;
+  }
+  .album-modal__grid {
+    padding: 0 20px 24px;
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

@@ -62,26 +62,49 @@ function main() {
         .sort((a, b) =>
           a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
         );
-
       if (photos.length === 0) return null;
+
+      // meta.json рядом с фото (опционально)
+      let meta = {};
+      const metaPath = path.join(folderPath, "meta.json");
+      if (fs.existsSync(metaPath)) {
+        try {
+          meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
+        } catch (e) {
+          console.warn(`⚠ meta.json битый в ${folderName}: ${e.message}`);
+        }
+      }
+
+      const stat = fs.statSync(folderPath);
+      const mtimeIso = stat.mtime.toISOString().slice(0, 10);
+
+      const tournamentDate =
+        meta.tournamentDate || extractDate(folderName, folderPath);
+      const addedDate = meta.addedDate || mtimeIso;
+      const title = meta.title || humanTitle(folderName);
 
       return {
         folder: `images/albums/${folderName}`,
-        title: humanTitle(folderName),
+        title,
         rawName: folderName,
-        date: extractDate(folderName, folderPath),
-        sport: guessSport(folderName),
+        tournamentDate,
+        addedDate,
+        sport: meta.sport || guessSport(folderName),
         cover: photos[0],
         photos,
       };
     })
     .filter(Boolean)
-    .sort((a, b) => (a.date < b.date ? 1 : -1)); // новые сверху
+    // сортируем по ДАТЕ ТУРНИРА (свежие турниры — сверху)
+    .sort((a, b) => (a.tournamentDate < b.tournamentDate ? 1 : -1));
 
+  fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
   fs.writeFileSync(OUTPUT, JSON.stringify(albums, null, 2), "utf-8");
   console.log(`✅ albums.json обновлён — ${albums.length} альбом(ов):`);
   albums.forEach((a) =>
-    console.log(`   • ${a.title}  (${a.photos.length} фото, ${a.date})`)
+    console.log(
+      `   • ${a.title} (${a.photos.length} фото, турнир: ${a.tournamentDate}, добавлен: ${a.addedDate})`
+    )
   );
 }
 
