@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Админка — ФПВС РМЭ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, sans-serif;
+            background: #f5f6f3;
+            color: #1c2929;
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ---------- Вход ---------- */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e4e8e5;
+        }
+
+        .login-card h1 {
+            font: 800 26px/1.2 Manrope, sans-serif;
+            letter-spacing: -0.6px;
+            margin-bottom: 6px;
+        }
+
+        .login-card p {
+            color: #78827e;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .login-card label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #78827e;
+            margin-bottom: 6px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dce2df;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: 0;
+        }
+
+        .login-card input:focus {
+            border-color: #ed7438;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border: 0;
+            border-radius: 8px;
+            padding: 13px 20px;
+            font-size: 13px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .btn-orange {
+            background: #ed7438;
+            color: #fff;
+        }
+
+        .btn-orange:hover {
+            background: #d86326;
+        }
+
+        .btn-orange:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .login-error {
+            color: #d84343;
+            font-size: 12px;
+            margin-top: 12px;
+            min-height: 16px;
+        }
+
+        /* ---------- Админка ---------- */
+        .admin-screen {
+            padding: 32px 20px 60px;
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .admin-head h1 {
+            font: 800 30px/1.1 Manrope, sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .admin-head .user {
+            font-size: 12px;
+            color: #78827e;
+            margin-top: 4px;
+        }
+
+        .logout {
+            background: #fff;
+            border: 1px solid #e4e8e5;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .logout:hover {
+            background: #f5f6f3;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e4e8e5;
+        }
+
+        .stat-card small {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #89938f;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-card b {
+            font: 800 28px Manrope, sans-serif;
+            color: #142a2b;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title {
+            font: 800 20px Manrope, sans-serif;
+            margin-bottom: 14px;
+            letter-spacing: -0.4px;
+        }
+
+        /* ---------- График ---------- */
+        .chart-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e4e8e5;
+            margin-bottom: 32px;
+        }
+
+        .chart-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .chart-head h2 {
+            font: 800 20px Manrope, sans-serif;
+            letter-spacing: -0.4px;
+        }
+
+        .chart-head .period {
+            background: #f5f6f3;
+            border-radius: 8px;
+            padding: 6px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .chart-head .period button {
+            border: 0;
+            background: transparent;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #78827e;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .chart-head .period button.active {
+            background: #fff;
+            color: #142a2b;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 200px;
+            padding-top: 10px;
+        }
+
+        .chart .bar {
+            flex: 1;
+            background: #ed7438;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 4px;
+            transition: 0.3s;
+        }
+
+        .chart .bar:hover {
+            background: #d86326;
+        }
+
+        .chart .bar .value {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #142a2b;
+            opacity: 0;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .chart .bar:hover .value {
+            opacity: 1;
+        }
+
+        .chart-labels {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .chart-labels span {
+            flex: 1;
+            text-align: center;
+            font-size: 10px;
+            color: #89938f;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ---------- Заявки ---------- */
+        .leads-table {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e4e8e5;
+            overflow: hidden;
+        }
+
+        .leads-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leads-table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #78827e;
+            font-weight: 700;
+            background: #fafbfa;
+            border-bottom: 1px solid #e4e8e5;
+            white-space: nowrap;
+        }
+
+        .leads-table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f2f0;
+            vertical-align: top;
+        }
+
+        .leads-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .leads-table tr.processed {
+            background: #f9fbf9;
+        }
+
+        .leads-table tr.processed td {
+            color: #78827e;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-new {
+            background: #fff1e6;
+            color: #d86326;
+        }
+
+        .status-processed {
+            background: #eaf4ed;
+            color: #2d7a58;
+        }
+
+        .mark-btn {
+            background: #ed7438;
+            color: #fff;
+            border: 0;
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .mark-btn:hover {
+            background: #d86326;
+        }
+
+        .mark-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .details-btn {
+            background: #fff;
+            color: #142a2b;
+            border: 1px solid #e4e8e5;
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            margin-right: 6px;
+        }
+
+        .details-btn:hover {
+            background: #f5f6f3;
+        }
+
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+            color: #89938f;
+            font-size: 13px;
+        }
+
+        .loading {
+            padding: 40px;
+            text-align: center;
+            color: #89938f;
+            font-size: 13px;
+        }
+
+        /* ---------- Модалка заявки ---------- */
+        .lead-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            display: none;
+        }
+
+        .lead-modal.open {
+            display: block;
+        }
+
+        .lead-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 30, 30, 0.65);
+            backdrop-filter: blur(3px);
+        }
+
+        .lead-modal__card {
+            position: relative;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            max-height: 88vh;
+            margin: 6vh auto 0;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .lead-modal__close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(20, 42, 43, 0.08);
+            color: #142a2b;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .lead-modal__close:hover {
+            background: rgba(20, 42, 43, 0.18);
+        }
+
+        .lead-modal__card h2 {
+            font: 800 22px Manrope, sans-serif;
+            letter-spacing: -0.4px;
+            margin-bottom: 4px;
+            padding-right: 40px;
+        }
+
+        .lead-modal__date {
+            font-size: 11px;
+            color: #89938f;
+            margin-bottom: 20px;
+        }
+
+        .lead-field {
+            margin-bottom: 16px;
+        }
+
+        .lead-field small {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #89938f;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .lead-field b,
+        .lead-field span {
+            font-size: 14px;
+            color: #1c2929;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .lead-field .message-text {
+            background: #f5f6f3;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #3a4a48;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .leads-table {
+                overflow-x: auto;
+            }
+
+            .leads-table table {
+                min-width: 720px;
+            }
+
+            .chart {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========== ЭКРАН ВХОДА ========== -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>Вход в панель</h1>
+            <p>Доступ только для администраторов федерации</p>
+            <form id="loginForm">
+                <label for="email">Email</label>
+                <input id="email" type="email" autocomplete="username" required placeholder="you@example.com">
+                <label for="password">Пароль</label>
+                <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+                <button class="btn btn-orange btn-full" type="submit" id="loginBtn">Войти</button>
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== ЭКРАН АДМИНКИ ========== -->
+    <div class="admin-screen hidden" id="adminScreen">
+        <div class="wrap">
+            <div class="admin-head">
+                <div>
+                    <h1>Панель федерации</h1>
+                    <div class="user" id="userInfo"></div>
+                </div>
+                <button class="logout" id="logoutBtn">Выйти</button>
+            </div>
+
+            <h2 class="section-title">Посетители сайта</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><small>Сегодня</small><b id="statToday">—</b></div>
+                <div class="stat-card"><small>За 7 дней</small><b id="statWeek">—</b></div>
+                <div class="stat-card"><small>За 30 дней</small><b id="statMonth">—</b></div>
+                <div class="stat-card"><small>За год</small><b id="statYear">—</b></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-head">
+                    <h2>Посещения по дням</h2>
+                    <div class="period" id="chartPeriod">
+                        <button data-days="7" class="active">7 дней</button>
+                        <button data-days="30">30 дней</button>
+                    </div>
+                </div>
+                <div class="chart" id="chart"></div>
+                <div class="chart-labels" id="chartLabels"></div>
+            </div>
+
+            <h2 class="section-title">Заявки с сайта</h2>
+            <div class="leads-table" id="leadsWrap">
+                <div class="loading">Загружаю заявки…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛКА ЗАЯВКИ ========== -->
+    <div class="lead-modal" id="leadModal">
+        <div class="lead-modal__backdrop" data-lead-close></div>
+        <div class="lead-modal__card">
+            <button class="lead-modal__close" data-lead-close aria-label="Закрыть">✕</button>
+            <h2 id="lmName">—</h2>
+            <div class="lead-modal__date" id="lmDate"></div>
+
+            <div class="lead-field"><small>Телефон</small><b id="lmPhone">—</b></div>
+            <div class="lead-field"><small>Тема</small><b id="lmTopic">—</b></div>
+            <div class="lead-field" id="lmTeamWrap"><small>Команда</small><b id="lmTeam">—</b></div>
+            <div class="lead-field" id="lmTournamentWrap"><small>Турнир</small><b id="lmTournament">—</b></div>
+            <div class="lead-field" id="lmMessageWrap">
+                <small>Сообщение</small>
+                <div class="message-text" id="lmMessage">—</div>
+            </div>
+            <div class="lead-field"><small>Статус</small><span id="lmStatus">—</span></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.1.0"></script>
+    <script src="appwrite-config.js"></script>
+    <script>
+        (function () {
+            const { Client, Account, Teams, Databases, Query } = Appwrite;
+
+            const config = window.APPWRITE_CONFIG;
+            const client = new Client()
+                .setEndpoint(config.endpoint)
+                .setProject(config.projectId);
+
+            const account = new Account(client);
+            const teams = new Teams(client);
+            const db = new Databases(client);
+
+            const loginScreen = document.getElementById("loginScreen");
+            const adminScreen = document.getElementById("adminScreen");
+            const loginForm = document.getElementById("loginForm");
+            const loginError = document.getElementById("loginError");
+            const loginBtn = document.getElementById("loginBtn");
+
+            let LEADS_CACHE = [];
+
+            // ---------- Вход ----------
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                loginError.textContent = "";
+                loginBtn.disabled = true;
+                loginBtn.textContent = "Вхожу…";
+
+                try {
+                    await account.createEmailPasswordSession(
+                        document.getElementById("email").value.trim(),
+                        document.getElementById("password").value
+                    );
+                    await checkAdminAndShow();
+                } catch (err) {
+                    loginError.textContent = "Неверный email или пароль";
+                    console.error(err);
+                } finally {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = "Войти";
+                }
+            });
+
+            // ---------- Проверка админа ----------
+            async function checkAdminAndShow() {
+                let user;
+                try {
+                    user = await account.get();
+                } catch {
+                    return showLogin();
+                }
+
+                let isAdmin = false;
+                try {
+                    const list = await teams.list();
+                    isAdmin = list.teams.some((t) => t.$id === "admins");
+                } catch (e) {
+                    console.error("Teams list error:", e);
+                }
+
+                if (!isAdmin) {
+                    loginError.textContent = "У вас нет прав администратора";
+                    await account.deleteSession({ sessionId: "current" }).catch(() => { });
+                    return showLogin();
+                }
+
+                loginScreen.classList.add("hidden");
+                adminScreen.classList.remove("hidden");
+                document.getElementById("userInfo").textContent = user.email + " · администратор";
+                loadStats();
+                loadLeads();
+            }
+
+            function showLogin() {
+                loginScreen.classList.remove("hidden");
+                adminScreen.classList.add("hidden");
+            }
+
+            // ---------- Выход ----------
+            document.getElementById("logoutBtn").addEventListener("click", async () => {
+                await account.deleteSession({ sessionId: "current" }).catch(() => { });
+                showLogin();
+                loginForm.reset();
+            });
+
+            // ---------- Статистика посещений + график ----------
+            async function loadStats() {
+                let rows = [];
+                try {
+                    const res = await db.listDocuments(
+                        config.databaseId,
+                        "page_views",
+                        [Query.limit(5000)]
+                    );
+                    rows = res.documents || [];
+                } catch (e) {
+                    console.error("Stats error:", e);
+                    document.getElementById("statToday").textContent = "?";
+                    document.getElementById("statWeek").textContent = "?";
+                    document.getElementById("statMonth").textContent = "?";
+                    document.getElementById("statYear").textContent = "?";
+                    return;
+                }
+
+                const dayMs = 86400000;
+                const today = new Date().toISOString().slice(0, 10);
+
+                function count(days) {
+                    const from = new Date(Date.now() - (days - 1) * dayMs).toISOString().slice(0, 10);
+                    const set = new Set();
+                    rows.forEach((r) => {
+                        if (r.date >= from && r.date <= today) set.add(r.visitorId);
+                    });
+                    return set.size;
+                }
+
+                document.getElementById("statToday").textContent = count(1);
+                document.getElementById("statWeek").textContent = count(7);
+                document.getElementById("statMonth").textContent = count(30);
+                document.getElementById("statYear").textContent = count(365);
+
+                // --- График ---
+                const byDate = {};
+                rows.forEach((r) => {
+                    if (!byDate[r.date]) byDate[r.date] = new Set();
+                    byDate[r.date].add(r.visitorId);
+                });
+
+                const chartEl = document.getElementById("chart");
+                const labelsEl = document.getElementById("chartLabels");
+
+                function renderChart(days) {
+                    const arr = [];
+                    for (let i = days - 1; i >= 0; i--) {
+                        const d = new Date(Date.now() - i * dayMs).toISOString().slice(0, 10);
+                        arr.push({ date: d, count: byDate[d] ? byDate[d].size : 0 });
+                    }
+                    const max = Math.max(...arr.map((x) => x.count), 1);
+                    chartEl.innerHTML = arr
+                        .map((x) => {
+                            const h = (x.count / max) * 100;
+                            return `<div class="bar" style="height:${h}%" title="${x.date}: ${x.count}">
+                                <span class="value">${x.count}</span>
+                            </div>`;
+                        })
+                        .join("");
+                    labelsEl.innerHTML = arr
+                        .map((x) => {
+                            const parts = x.date.split("-");
+                            return `<span>${parseInt(parts[2])}.${parts[1]}</span>`;
+                        })
+                        .join("");
+                }
+
+                renderChart(7);
+
+                document.querySelectorAll("#chartPeriod button").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        document
+                            .querySelectorAll("#chartPeriod button")
+                            .forEach((b) => b.classList.remove("active"));
+                        btn.classList.add("active");
+                        renderChart(parseInt(btn.dataset.days, 10));
+                    });
+                });
+            }
+
+            // ---------- Заявки ----------
+            async function loadLeads() {
+                const wrap = document.getElementById("leadsWrap");
+                wrap.innerHTML = '<div class="loading">Загружаю заявки…</div>';
+
+                try {
+                    const res = await db.listDocuments(
+                        config.databaseId,
+                        "leads",
+                        [Query.orderDesc("$createdAt"), Query.limit(500)]
+                    );
+                    const rows = res.documents || [];
+                    LEADS_CACHE = rows;
+                    renderLeads(rows);
+                } catch (e) {
+                    console.error("Leads error:", e);
+                    wrap.innerHTML = '<div class="empty-state">Не удалось загрузить заявки</div>';
+                }
+            }
+
+            function renderLeads(rows) {
+                const wrap = document.getElementById("leadsWrap");
+                if (!rows.length) {
+                    wrap.innerHTML = '<div class="empty-state">Пока нет заявок</div>';
+                    return;
+                }
+
+                wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Тема</th>
+            <th>Команда</th>
+            <th>Статус</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(renderRow).join("")}
+        </tbody>
+      </table>
+    `;
+
+                wrap.querySelectorAll("[data-mark]").forEach((btn) => {
+                    btn.addEventListener("click", () => markProcessed(btn.dataset.mark, btn));
+                });
+
+                wrap.querySelectorAll("[data-details]").forEach((btn) => {
+                    btn.addEventListener("click", () => openLeadModal(btn.dataset.details));
+                });
+            }
+
+            function renderRow(r) {
+                const date = new Date(r.$createdAt).toLocaleString("ru-RU", {
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit",
+                });
+                const isProcessed = r.status === "processed";
+                return `
+      <tr class="${isProcessed ? "processed" : ""}" data-row="${r.$id}">
+        <td>${date}</td>
+        <td>${escapeHtml(r.name || "—")}</td>
+        <td>${escapeHtml(r.phone || "—")}</td>
+        <td>${escapeHtml(r.topic || "—")}</td>
+        <td>${escapeHtml(r.teamName || "—")}</td>
+        <td>
+          <span class="status-badge ${isProcessed ? "status-processed" : "status-new"}">
+            ${isProcessed ? "Обработано" : "Новая"}
+          </span>
+        </td>
+        <td>
+          <button class="details-btn" data-details="${r.$id}">Подробнее</button>
+          ${!isProcessed
+                        ? `<button class="mark-btn" data-mark="${r.$id}">Обработано</button>`
+                        : ""}
+        </td>
+      </tr>
+    `;
+            }
+
+            async function markProcessed(rowId, btn) {
+                btn.disabled = true;
+                btn.textContent = "Сохраняю…";
+                try {
+                    await db.updateDocument(
+                        config.databaseId,
+                        "leads",
+                        rowId,
+                        { status: "processed" }
+                    );
+                    const tr = document.querySelector(`tr[data-row="${rowId}"]`);
+                    if (tr) {
+                        tr.classList.add("processed");
+                        tr.querySelector(".status-badge").className = "status-badge status-processed";
+                        tr.querySelector(".status-badge").textContent = "Обработано";
+                        btn.remove();
+                    }
+                    // Обновим кэш
+                    const cached = LEADS_CACHE.find((x) => x.$id === rowId);
+                    if (cached) cached.status = "processed";
+                } catch (e) {
+                    console.error("Update error:", e);
+                    btn.disabled = false;
+                    btn.textContent = "Ошибка. Повторить";
+                }
+            }
+
+            // ---------- Модалка заявки ----------
+            function openLeadModal(id) {
+                const r = LEADS_CACHE.find((x) => x.$id === id);
+                if (!r) return;
+
+                const modal = document.getElementById("leadModal");
+                const date = new Date(r.$createdAt).toLocaleString("ru-RU", {
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit",
+                });
+
+                document.getElementById("lmName").textContent = r.name || "—";
+                document.getElementById("lmDate").textContent = date;
+                document.getElementById("lmPhone").textContent = r.phone || "—";
+                document.getElementById("lmTopic").textContent = r.topic || "—";
+
+                const teamWrap = document.getElementById("lmTeamWrap");
+                const tourWrap = document.getElementById("lmTournamentWrap");
+                const msgWrap = document.getElementById("lmMessageWrap");
+
+                if (r.teamName) {
+                    teamWrap.style.display = "";
+                    document.getElementById("lmTeam").textContent = r.teamName;
+                } else {
+                    teamWrap.style.display = "none";
+                }
+
+                if (r.tournament) {
+                    tourWrap.style.display = "";
+                    document.getElementById("lmTournament").textContent = r.tournament;
+                } else {
+                    tourWrap.style.display = "none";
+                }
+
+                if (r.message) {
+                    msgWrap.style.display = "";
+                    document.getElementById("lmMessage").textContent = r.message;
+                } else {
+                    msgWrap.style.display = "none";
+                }
+
+                document.getElementById("lmStatus").textContent =
+                    r.status === "processed" ? "Обработано" : "Новая";
+
+                modal.classList.add("open");
+                document.body.style.overflow = "hidden";
+
+                modal.querySelectorAll("[data-lead-close]").forEach((el) => {
+                    el.onclick = closeLeadModal;
+                });
+            }
+
+            function closeLeadModal() {
+                document.getElementById("leadModal").classList.remove("open");
+                document.body.style.overflow = "";
+            }
+
+            function escapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+
+            // ---------- Esc закрывает модалку ----------
+            document.addEventListener("keydown", (e) => {
+                if (e.key !== "Escape") return;
+                const modal = document.getElementById("leadModal");
+                if (modal && modal.classList.contains("open")) closeLeadModal();
+            });
+
+            // ---------- Проверка сессии при загрузке ----------
+            checkAdminAndShow();
+        })();
+    </script>
+</body>
+
+</html>

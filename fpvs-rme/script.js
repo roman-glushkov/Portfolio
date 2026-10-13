@@ -90,15 +90,209 @@ window.bracket = bracket;
  *  §4  ФОРМА
  * ================================================================ */
 
+function createAppwriteDocumentId() {
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const values = new Uint32Array(20);
+
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(values);
+  } else {
+    for (let i = 0; i < values.length; i += 1) {
+      values[i] = Math.floor(Math.random() * 0xffffffff);
+    }
+  }
+
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+}
+
+function getAppwriteConfig() {
+  const config = window.APPWRITE_CONFIG || {};
+  const requiredFields = ["endpoint", "projectId", "databaseId", "collectionId"];
+  const missingField = requiredFields.find((field) => {
+    const value = config[field];
+    return (
+      typeof value !== "string" ||
+      !value.trim() ||
+      value.includes("PASTE_") ||
+      value.includes("<REGION>")
+    );
+  });
+
+  if (missingField) {
+    throw new Error(
+      "Appwrite ещё не настроен. Заполни endpoint, projectId, databaseId и collectionId в appwrite-config.js."
+    );
+  }
+
+  const endpoint = config.endpoint.trim().replace(/\/+$/, "");
+  if (!/^https:\/\//i.test(endpoint)) {
+    throw new Error("Endpoint Appwrite должен начинаться с https://.");
+  }
+
+  return {
+    endpoint,
+    projectId: config.projectId.trim(),
+    databaseId: config.databaseId.trim(),
+    collectionId: config.collectionId.trim(),
+  };
+}
+
+async function createLeadDocument(data) {
+  const config = getAppwriteConfig();
+  const url =
+    `${config.endpoint}/databases/${encodeURIComponent(config.databaseId)}` +
+    `/collections/${encodeURIComponent(config.collectionId)}/documents`;
+
+  let response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Appwrite-Project": config.projectId,
+      },
+      body: JSON.stringify({
+        documentId: createAppwriteDocumentId(),
+        data,
+      }),
+    });
+  } catch (error) {
+    throw new Error(
+      "Не удалось связаться с Appwrite. Проверь интернет, endpoint и Web-платформу в настройках проекта."
+    );
+  }
+
+  let result = {};
+  try {
+    result = await response.json();
+  } catch (error) {
+    result = {};
+  }
+
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(
+        "Appwrite запретил запись. Проверь разрешение Create для Any у коллекции leads. Не включай публичное чтение."
+      );
+    }
+
+    if (response.status === 404) {
+      throw new Error(
+        "Appwrite не нашёл проект, базу или коллекцию. Проверь endpoint и все три идентификатора в appwrite-config.js."
+      );
+    }
+
+    const details = typeof result.message === "string" ? ` ${result.message}` : "";
+    throw new Error(`Appwrite вернул ошибку ${response.status}.${details}`);
+  }
+
+  return result;
+}
+
+function setFormStatus(message, type = "") {
+  const status = $("#formStatus");
+  if (!status) return;
+
+  status.textContent = message;
+  status.classList.remove("form-status--success", "form-status--error");
+  if (type) status.classList.add(`form-status--${type}`);
+}
+
 function initForm() {
   const form = $("#form");
   if (!form) return;
 
-  form.onsubmit = (e) => {
-    e.preventDefault();
-    e.target.reset();
-    toast("Сообщение принято в демонстрационном режиме");
+  const topicSelect = $("#leadTopic");
+  const registrationFields = $("#registrationFields");
+  const teamNameInput = $("#teamName");
+  const submitButton = $("#leadSubmit");
+  const originalButtonText = submitButton?.textContent || "Отправить заявку";
+
+  const updateRegistrationFields = () => {
+    const isRegistration = topicSelect?.value === "Хочу принять участие";
+    if (registrationFields) registrationFields.hidden = !isRegistration;
+    if (teamNameInput) teamNameInput.required = Boolean(isRegistration);
   };
+
+  topicSelect?.addEventListener("change", updateRegistrationFields);
+  updateRegistrationFields();
+  form.dataset.startedAt = String(Date.now());
+
+  form.addEventListener("input", () => {
+    const status = $("#formStatus");
+    if (status?.classList.contains("form-status--error")) {
+      setFormStatus("");
+    }
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (form.dataset.busy === "true") return;
+
+    const formData = new FormData(form);
+    const honeypot = String(formData.get("website") || "").trim();
+    if (honeypot) return;
+
+    if (Date.now() - Number(form.dataset.startedAt || 0) < 1200) {
+      setFormStatus("Проверь данные и попробуй отправить заявку ещё раз через секунду.", "error");
+      return;
+    }
+
+    const name = String(formData.get("name") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const topic = String(formData.get("topic") || "").trim();
+    const isRegistration = topic === "Хочу принять участие";
+    const teamName = String(formData.get("teamName") || "").trim();
+    const tournament = String(formData.get("tournament") || "").trim();
+    const message = String(formData.get("message") || "").trim();
+
+    if (!name || !phone || !topic || (isRegistration && !teamName)) {
+      setFormStatus("Заполни обязательные поля, отмеченные звёздочкой.", "error");
+      return;
+    }
+
+    const lead = {
+      name,
+      captain: isRegistration ? name : "",
+      phone,
+      topic,
+      teamName: isRegistration ? teamName : "",
+      tournament: isRegistration ? tournament : "",
+      message,
+      status: "new",
+      source: "fpvs-rme-website",
+    };
+
+    form.dataset.busy = "true";
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Отправка…";
+    }
+    setFormStatus("Отправляем заявку…");
+
+    try {
+      await createLeadDocument(lead);
+      form.reset();
+      form.dataset.startedAt = String(Date.now());
+      updateRegistrationFields();
+      setFormStatus(
+        "Заявка сохранена. Представитель федерации сможет связаться с вами по указанному телефону.",
+        "success"
+      );
+      toast("Заявка успешно отправлена");
+    } catch (error) {
+      const messageText = error instanceof Error ? error.message : "Не удалось отправить заявку.";
+      setFormStatus(messageText, "error");
+      toast("Не удалось отправить заявку");
+      console.error("[Appwrite] Не удалось сохранить заявку:", error);
+    } finally {
+      form.dataset.busy = "false";
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    }
+  });
 }
 
 /* ================================================================
@@ -164,9 +358,8 @@ function renderLightbox() {
   if (!lb) return;
   const photo = lightbox.album[lightbox.index];
   lb.querySelector(".lb-img").src = photo.src;
-  lb.querySelector(".lb-counter").textContent = `${lightbox.index + 1} / ${
-    lightbox.album.length
-  }  ·  ${photo.albumTitle}`;
+  lb.querySelector(".lb-counter").textContent = `${lightbox.index + 1} / ${lightbox.album.length
+    }  ·  ${photo.albumTitle}`;
 }
 
 function closeLightbox() {
@@ -268,9 +461,8 @@ function renderAlbumChips() {
     (a) => `
       <span class="chip" data-folder="${a.folder}">
         <b>${a.title}</b>
-        <small>Турнир: ${formatDate(a.tournamentDate)} · ${
-      a.photos.length
-    } фото</small>
+        <small>Турнир: ${formatDate(a.tournamentDate)} · ${a.photos.length
+      } фото</small>
       </span>`
   ).join("");
 
@@ -451,9 +643,9 @@ async function loadNews() {
     ${renderNewsCard(featured, true)}
     <div class="side">
       ${rest
-        .slice(0, 2)
-        .map((n) => renderNewsCard(n, false))
-        .join("")}
+      .slice(0, 2)
+      .map((n) => renderNewsCard(n, false))
+      .join("")}
     </div>
   `;
 
@@ -467,9 +659,9 @@ function renderNewsCard(n, isFeatured) {
   if (isFeatured) {
     const collage = photos.length
       ? `<div class="news-collage news-collage--${Math.min(
-          photos.length,
-          5
-        )}">${renderCollage(photos, n.id)}</div>`
+        photos.length,
+        5
+      )}">${renderCollage(photos, n.id)}</div>`
       : "";
     return `
       <article class="main-post news-card" data-news-id="${n.id}">
