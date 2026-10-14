@@ -328,3 +328,21 @@ export function prefillLeadForm(opts = {}) {
     document.getElementById("leadName")?.focus();
   }, 200);
 }
+
+/**
+ * Перехватывает клики по ссылкам с data-prefill-topic.
+ * Например: <a data-prefill-topic="Хочу стать партнёром" href="#contacts">
+ */
+export function initPrefillLinks() {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-prefill-topic]");
+    if (!link) return;
+
+    const topic = link.dataset.prefillTopic;
+    if (!topic) return;
+
+    // Не мешаем smooth-scroll — он тоже сработает (по href="#contacts")
+    // Но добавляем своё: префилл
+    prefillLeadForm({ topic });
+  });
+}

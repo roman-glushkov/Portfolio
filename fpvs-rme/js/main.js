@@ -3,7 +3,7 @@ import "./data/views.js";
 import { loadPartials } from "./core/partials.js";
 import { initSmoothScroll } from "./ui/smooth-scroll.js";
 import { initLightbox, closeLightbox, isLightboxOpen } from "./ui/lightbox.js";
-import { initForm } from "./forms/lead-form.js";
+import { initForm, initPrefillLinks } from "./forms/lead-form.js";
 import { loadStats } from "./data/stats.js";
 import { initBurger } from "./ui/burger.js";
 import { loadTournaments } from "./data/tournaments.js";
@@ -19,6 +19,7 @@ async function startSite() {
   await loadPartials();
   initBurger();
   initForm();
+  initPrefillLinks();
   initSmoothScroll();
   initLightbox();
 
