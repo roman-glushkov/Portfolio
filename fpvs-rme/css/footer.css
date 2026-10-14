@@ -1,0 +1,42 @@
+/* ================================================================
+ *  ПОДВАЛ
+ * ================================================================ */
+
+footer {
+  background: #142a2b;
+  color: #fff;
+  padding: 42px 0 0;
+}
+
+.foot {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+}
+
+.foot>div:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.foot b {
+  font-size: 10px;
+}
+
+.foot a,
+.foot span,
+.foot p {
+  font-size: 9px;
+  color: #9aa9a5;
+}
+
+.copy {
+  text-align: center;
+  border-top: 1px solid #2e4445;
+  margin-top: 35px;
+  padding: 15px;
+  color: #758986;
+  font-size: 7px;
+}
+

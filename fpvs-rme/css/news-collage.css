@@ -1,0 +1,135 @@
+/* ================================================================
+ *  ВК-КОЛЛАЖ (в ленте И в модалке)
+ * ================================================================ */
+
+.news-collage {
+  width: 100%;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+  display: grid;
+  gap: 3px;
+  background: #e6e9e6;
+}
+
+.news-collage--1 {
+  grid-template-columns: 1fr;
+  grid-auto-rows: 400px;
+}
+
+.news-collage--1 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-collage--2 {
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 400px;
+}
+
+.news-collage--2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-collage--3 {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 200px 200px;
+}
+
+.news-collage--3 .collage-big {
+  grid-row: 1 / 3;
+  grid-column: 1 / 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-collage--3 .collage-col {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+}
+
+.news-collage--3 .collage-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-collage--4,
+.news-collage--5 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 200px 200px;
+}
+
+.news-collage--4 .collage-cell,
+.news-collage--5 .collage-cell {
+  position: relative;
+  overflow: hidden;
+}
+
+.news-collage--4 .collage-cell img,
+.news-collage--5 .collage-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Главная карточка — коллаж компактнее, чтобы текст влезал */
+.main-post .news-collage--4,
+.main-post .news-collage--5 {
+  grid-template-rows: 160px 160px;
+}
+
+.main-post .news-collage--1,
+.main-post .news-collage--2 {
+  grid-auto-rows: 280px;
+}
+
+.main-post .news-collage--3 {
+  grid-template-rows: 140px 140px;
+}
+
+.collage-more {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 42, 43, 0.55);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 800 26px Manrope, sans-serif;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.news-collage img {
+  transition: transform 0.35s;
+}
+
+.news-collage img:hover {
+  transform: scale(1.03);
+}
+
+.side .news-collage--1,
+.side .news-collage--2 {
+  grid-auto-rows: 220px;
+}
+
+.side .news-collage--3 {
+  grid-template-rows: 110px 110px;
+}
+
+.side .news-collage--4,
+.side .news-collage--5 {
+  grid-template-rows: 110px 110px;
+}
+

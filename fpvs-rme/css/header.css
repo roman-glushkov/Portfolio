@@ -1,0 +1,89 @@
+/* ================================================================
+ *  ШАПКА И ЛОГОТИП
+ * ================================================================ */
+
+.brand-logo {
+  width: 39px;
+  height: 39px;
+  object-fit: contain;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.top {
+  height: 30px;
+  background: #142a2b;
+  color: #b9c6c3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 max(20px, calc((100% - 1240px) / 2));
+  font-size: 9px;
+}
+
+.head {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.header,
+header {
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid #e5e9e6;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 180px;
+}
+
+.brand b,
+.brand small {
+  display: block;
+}
+
+.brand b {
+  font-size: 17px;
+}
+
+.brand small {
+  font-size: 9px;
+  color: #89938f;
+}
+
+.head nav {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.head nav a:hover {
+  color: #e46b31;
+}
+
+.contact,
+.select {
+  border: 1px solid #dfe4e1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.burger {
+  display: none;
+  border: 0;
+  background: none;
+  font-size: 22px;
+}
+

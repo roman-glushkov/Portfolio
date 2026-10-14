@@ -1,0 +1,181 @@
+/* ================================================================
+ *  МОБИЛЬНАЯ АДАПТАЦИЯ
+ *  Добавлено поверх существующих стилей.
+ *  Основная задача — перестроить все сетки в одну колонку,
+ *  уменьшить отступы и шрифты, убрать горизонтальные переполнения.
+ * ================================================================ */
+
+/* ---------- Планшет (до 900px) ---------- */
+@media (max-width: 900px) {
+
+  /* Убираем фиксированный горизонтальный отступ wrap */
+  .wrap {
+    width: calc(100% - 32px);
+  }
+
+  /* Секции — меньше вертикальных отступов */
+  .section {
+    padding: 56px 0;
+  }
+
+  /* Шапка */
+  .top {
+    font-size: 8px;
+    padding: 0 16px;
+  }
+
+  .head {
+    height: 64px;
+    gap: 16px;
+  }
+
+  .head nav {
+    gap: 16px;
+    font-size: 11px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand b {
+    font-size: 15px;
+  }
+
+  /* Hero */
+  .hero {
+    height: 540px;
+  }
+
+  .hero h1 {
+    font: 800 56px/1 Manrope;
+    letter-spacing: -2.5px;
+    margin: 18px 0 14px;
+  }
+
+  .hero p {
+    font-size: 13px;
+    max-width: 480px;
+  }
+
+  .stats {
+    gap: 28px;
+    margin-top: 32px;
+  }
+
+  .stats b {
+    font-size: 17px;
+  }
+
+  /* Новости */
+  .news {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .side {
+    gap: 14px;
+  }
+
+  /* Турниры */
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .cards img {
+    height: 180px;
+  }
+
+  /* Календарь */
+  .event {
+    grid-template-columns: 56px 1fr auto;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .event>strong {
+    font-size: 22px;
+  }
+
+  .event>a {
+    grid-column: 2 / 4;
+    justify-self: start;
+    padding-top: 4px;
+  }
+
+  .event mark {
+    padding: 6px 9px;
+  }
+
+  /* Онлайн-сетка */
+  .bracket {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  /* Галерея */
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+  }
+
+  .gallery .big {
+    grid-row: span 1;
+  }
+
+  /* О федерации */
+  .people-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .portrait img {
+    height: 420px;
+  }
+
+  /* Партнёры */
+  .support {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Контакты */
+  .contacts {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Подвал */
+  .foot {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  /* Заголовки секций */
+  .section-head h2,
+  .people h2,
+  .support h2,
+  .contacts h2 {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .live-head h2 {
+    font-size: 30px;
+  }
+
+  /* Секция-head перестаёт быть flex-строкой */
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .section-head>a,
+  .section-head>button {
+    align-self: flex-start;
+  }
+}
+

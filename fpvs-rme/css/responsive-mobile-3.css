@@ -1,0 +1,142 @@
+/* ---------- Телефон (продолжение) ---------- */
+@media (max-width: 640px) {
+  .team {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .people p,
+  .support p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  /* Партнёры */
+  .support-items {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .support-items span {
+    padding: 16px;
+    font-size: 11px;
+  }
+
+  /* Контакты */
+  .contact-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .contact-list div:last-child {
+    grid-column: auto;
+  }
+
+  .contacts form {
+    padding: 20px;
+  }
+
+  .contacts input,
+  .contacts select,
+  .contacts textarea {
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .contacts textarea {
+    height: 100px;
+  }
+
+  .contacts form .form-label {
+    font-size: 11px;
+  }
+
+  .contacts form .form-status {
+    font-size: 11px;
+  }
+
+  .contacts form .form-note {
+    font-size: 9.5px;
+  }
+
+  /* Подвал */
+  .foot {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .foot p,
+  .foot a,
+  .foot span {
+    font-size: 10px;
+  }
+
+  .copy {
+    font-size: 8px;
+    padding: 12px;
+  }
+
+  /* Модалки — на телефоне почти на весь экран */
+  .post-modal__card,
+  .album-modal__card {
+    width: calc(100% - 16px);
+    margin: 3vh auto 0;
+    max-height: 94vh;
+    border-radius: 12px;
+  }
+
+  .post-modal__head,
+  .album-modal__head {
+    padding: 20px 52px 6px 18px;
+  }
+
+  .post-modal__title {
+    font-size: 20px;
+  }
+
+  .post-modal__body {
+    padding: 6px 18px 16px;
+    font-size: 13px;
+  }
+
+  .post-modal__gallery,
+  .album-modal__grid {
+    padding: 0 18px 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+
+  /* Лайтбокс */
+  .lb-img {
+    max-width: 96vw;
+    max-height: 80vh;
+  }
+
+  .lb-close,
+  .lb-prev,
+  .lb-next {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+  }
+
+  .lb-close {
+    top: 12px;
+    right: 12px;
+    font-size: 18px;
+  }
+
+  .lb-prev {
+    left: 10px;
+  }
+
+  .lb-next {
+    right: 10px;
+  }
+
+  .lb-counter {
+    font-size: 11px;
+    bottom: 14px;
+  }
+}

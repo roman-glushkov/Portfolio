@@ -1,0 +1,36 @@
+/* ================================================================
+ *  БАЗА
+ * ================================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f5f6f3;
+  color: #1c2929;
+  font: 14px Inter, Arial, sans-serif;
+}
+
+.wrap {
+  width: min(1240px, calc(100% - 40px));
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+

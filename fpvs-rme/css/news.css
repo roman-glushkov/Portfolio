@@ -1,0 +1,111 @@
+/* ================================================================
+ *  НОВОСТИ — лента
+ * ================================================================ */
+
+.news {
+  display: grid;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 20px;
+}
+
+.main-post {
+  background: #f2f3ef;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.news-card__text {
+  padding: 24px;
+}
+
+.main-post label,
+.side label,
+.cards label {
+  font-size: 9px;
+  color: #df6a30;
+  font-weight: 800;
+}
+
+.main-post h3 {
+  font: 700 25px Manrope;
+  margin: 10px 0;
+}
+
+.main-post p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #69746f;
+}
+
+.main-post a,
+.side a,
+.cards a {
+  font-size: 10px;
+  color: #df6a30;
+  font-weight: 800;
+}
+
+.side {
+  display: grid;
+  gap: 20px;
+}
+
+.side-card {
+  background: #f2f3ef;
+  border-radius: 15px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.side-card:hover {
+  background: #ede7dd;
+}
+
+.side-thumb {
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  object-fit: cover;
+  display: block;
+  background: #e2e7e2;
+}
+
+.side-thumb--empty {
+  background: #e6e9e6;
+}
+
+.side-card__text {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.side-card__text label {
+  font-size: 9px;
+  color: #df6a30;
+  font-weight: 800;
+}
+
+.side-card__text h3 {
+  font: 700 15px/1.25 Manrope, sans-serif;
+  color: #142a2b;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.side-card__text a {
+  font-size: 10px;
+  color: #df6a30;
+  font-weight: 800;
+  margin-top: 4px;
+}
+

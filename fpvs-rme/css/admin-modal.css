@@ -1,0 +1,118 @@
+        /* ---------- Модалка заявки ---------- */
+        .lead-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            display: none;
+        }
+
+        .lead-modal.open {
+            display: block;
+        }
+
+        .lead-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 30, 30, 0.65);
+            backdrop-filter: blur(3px);
+        }
+
+        .lead-modal__card {
+            position: relative;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            max-height: 88vh;
+            margin: 6vh auto 0;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .lead-modal__close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(20, 42, 43, 0.08);
+            color: #142a2b;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .lead-modal__close:hover {
+            background: rgba(20, 42, 43, 0.18);
+        }
+
+        .lead-modal__card h2 {
+            font: 800 22px Manrope, sans-serif;
+            letter-spacing: -0.4px;
+            margin-bottom: 4px;
+            padding-right: 40px;
+        }
+
+        .lead-modal__date {
+            font-size: 11px;
+            color: #89938f;
+            margin-bottom: 20px;
+        }
+
+        .lead-field {
+            margin-bottom: 16px;
+        }
+
+        .lead-field small {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #89938f;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .lead-field b,
+        .lead-field span {
+            font-size: 14px;
+            color: #1c2929;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .lead-field .message-text {
+            background: #f5f6f3;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #3a4a48;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .leads-table {
+                overflow-x: auto;
+            }
+
+            .leads-table table {
+                min-width: 720px;
+            }
+
+            .chart {
+                height: 150px;
+            }
+        }

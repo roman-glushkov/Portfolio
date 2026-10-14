@@ -1,0 +1,170 @@
+/* ---------- Телефон (до 640px) ---------- */
+@media (max-width: 640px) {
+
+  /* Секции — ещё компактнее */
+  .section {
+    padding: 44px 0;
+  }
+
+  /* Шапка: включаем бургер */
+  .burger {
+    display: block;
+    margin-left: auto;
+  }
+
+  .head {
+    gap: 12px;
+  }
+
+  .head nav {
+    position: fixed;
+    top: 94px;
+    /* 30 (top) + 64 (head) */
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 16px 16px;
+    border-bottom: 1px solid #e5e9e6;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s;
+    z-index: 19;
+  }
+
+  .head nav.open {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .head nav a {
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f2f0;
+    font-size: 14px;
+  }
+
+  .head nav a:last-child {
+    border-bottom: 0;
+  }
+
+  .contact {
+    display: none;
+    /* убираем кнопку "Связаться" — её роль выполнит меню */
+  }
+
+  /* Верхняя полоска — скрываем, чтобы не мешала */
+  .top {
+    display: none;
+  }
+
+  .head nav {
+    top: 64px;
+  }
+
+  /* Hero */
+  .hero {
+    height: 520px;
+  }
+
+  .hero h1 {
+    font: 800 40px/1 Manrope;
+    letter-spacing: -1.6px;
+    margin: 14px 0 12px;
+  }
+
+  .hero p {
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .pill {
+    font-size: 8px;
+    padding: 6px 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+
+  .stats {
+    gap: 20px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stats b {
+    font-size: 15px;
+  }
+
+  .stats span {
+    font-size: 8px;
+  }
+
+  /* Ticker — чуть медленнее, чтобы читалось */
+  .ticker div {
+    animation-duration: 35s;
+  }
+
+  /* Заголовки */
+  .section-head h2,
+  .people h2,
+  .support h2,
+  .contacts h2,
+  .live-head h2 {
+    font-size: 24px;
+    letter-spacing: -0.8px;
+  }
+
+  .section-head small,
+  .people>div>small,
+  .contacts>div>small,
+  .support>div>small {
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+
+  .section-head p {
+    font-size: 11px;
+  }
+
+  /* Новости: главная карточка компактнее */
+  .news-collage--1,
+  .news-collage--2 {
+    grid-auto-rows: 220px;
+  }
+
+  .news-collage--3 {
+    grid-template-rows: 110px 110px;
+  }
+
+  .news-collage--4,
+  .news-collage--5 {
+    grid-template-rows: 130px 130px;
+  }
+
+  .main-post .news-collage--1,
+  .main-post .news-collage--2 {
+    grid-auto-rows: 220px;
+  }
+
+  .main-post .news-collage--3 {
+    grid-template-rows: 110px 110px;
+  }
+
+  .main-post .news-collage--4,
+  .main-post .news-collage--5 {
+    grid-template-rows: 130px 130px;
+  }
+
+}

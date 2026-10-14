@@ -1,0 +1,24 @@
+/* ================================================================
+ *  TOAST
+ * ================================================================ */
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #142a2b;
+  color: #fff;
+  padding: 12px 17px;
+  border-radius: 8px;
+  font-size: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.2s;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: none;
+}
+

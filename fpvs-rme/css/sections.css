@@ -1,0 +1,49 @@
+/* ================================================================
+ *  СЕКЦИИ
+ * ================================================================ */
+
+.section {
+  padding: 88px 0;
+}
+
+.white {
+  background: #fff;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 30px;
+}
+
+.section-head small,
+.people>div>small,
+.contacts>div>small,
+.support>div>small {
+  color: #e56e33;
+  font-weight: 800;
+  font-size: 9px;
+  letter-spacing: 1.6px;
+}
+
+.section-head h2,
+.people h2,
+.support h2,
+.contacts h2 {
+  font: 800 39px/1.05 Manrope;
+  letter-spacing: -1.5px;
+  margin: 6px 0;
+}
+
+.section-head>a {
+  font-size: 10px;
+  color: #df6a30;
+  font-weight: 800;
+}
+
+.section-head p {
+  font-size: 11px;
+  color: #78827e;
+}
+

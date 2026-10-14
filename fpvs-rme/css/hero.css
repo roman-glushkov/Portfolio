@@ -1,0 +1,108 @@
+/* ================================================================
+ *  HERO
+ * ================================================================ */
+
+.hero {
+  height: 650px;
+  position: relative;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../images/hero.jpg") center/cover;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #102829e8, #10282988 48%, #1028290a);
+}
+
+.hero-in {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pill {
+  width: max-content;
+  background: #ffffff18;
+  border: 1px solid #ffffff3b;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 9px;
+}
+
+.hero h1 {
+  font: 800 78px/0.96 Manrope;
+  margin: 22px 0 17px;
+  letter-spacing: -4px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: #ff9a5d;
+}
+
+.hero p {
+  max-width: 560px;
+  color: #e1e9e6;
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 20px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.orange {
+  background: #ed7438;
+  color: white;
+}
+
+.glass {
+  border: 1px solid #fff6;
+  background: #fff1;
+  color: white;
+}
+
+.darkbtn {
+  background: #142a2b;
+  color: #fff;
+}
+
+.stats {
+  display: flex;
+  gap: 42px;
+  margin-top: 42px;
+}
+
+.stats span {
+  font-size: 9px;
+  color: #bdc9c5;
+}
+
+.stats b {
+  display: block;
+  color: #fff;
+  font-size: 19px;
+}
+

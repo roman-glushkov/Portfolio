@@ -1,0 +1,24 @@
+/* ================================================================
+ *  ПАРТНЁРЫ
+ * ================================================================ */
+
+.support {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.support-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.support-items span {
+  background: #f3f4f0;
+  padding: 21px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+

@@ -1,0 +1,94 @@
+        /* ---------- Вход ---------- */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e4e8e5;
+        }
+
+        .login-card h1 {
+            font: 800 26px/1.2 Manrope, sans-serif;
+            letter-spacing: -0.6px;
+            margin-bottom: 6px;
+        }
+
+        .login-card p {
+            color: #78827e;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .login-card label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #78827e;
+            margin-bottom: 6px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dce2df;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: 0;
+        }
+
+        .login-card input:focus {
+            border-color: #ed7438;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border: 0;
+            border-radius: 8px;
+            padding: 13px 20px;
+            font-size: 13px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .btn-orange {
+            background: #ed7438;
+            color: #fff;
+        }
+
+        .btn-orange:hover {
+            background: #d86326;
+        }
+
+        .btn-orange:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .login-error {
+            color: #d84343;
+            font-size: 12px;
+            margin-top: 12px;
+            min-height: 16px;
+        }

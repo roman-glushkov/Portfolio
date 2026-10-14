@@ -1,0 +1,22 @@
+/* ---------- Очень узкий телефон (до 380px) ---------- */
+@media (max-width: 380px) {
+  .hero h1 {
+    font-size: 34px;
+    letter-spacing: -1.2px;
+  }
+
+  .section-head h2,
+  .people h2,
+  .support h2,
+  .contacts h2 {
+    font-size: 22px;
+  }
+
+  .stats {
+    gap: 16px;
+  }
+
+  .stats b {
+    font-size: 14px;
+  }
+}

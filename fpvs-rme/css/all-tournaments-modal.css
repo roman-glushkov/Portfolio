@@ -1,0 +1,280 @@
+/* ================================================================
+ *  МОДАЛКА "ВСЕ ТУРНИРЫ" + карточка-кнопка
+ * ================================================================ */
+
+/* ---------- Модалка ---------- */
+
+.all-tournaments-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: none;
+}
+
+.all-tournaments-modal.open {
+    display: block;
+}
+
+.all-tournaments-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 30, 30, 0.75);
+    backdrop-filter: blur(3px);
+}
+
+.all-tournaments-modal__card {
+    position: relative;
+    max-width: 760px;
+    width: calc(100% - 40px);
+    max-height: 90vh;
+    margin: 5vh auto 0;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    overflow-y: auto;
+    animation: pm-rise 0.25s ease;
+}
+
+.all-tournaments-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(20, 42, 43, 0.08);
+    color: #142a2b;
+    font-size: 18px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+}
+
+.all-tournaments-modal__close:hover {
+    background: rgba(20, 42, 43, 0.18);
+}
+
+.all-tournaments-modal__head {
+    padding: 28px 68px 16px 32px;
+    border-bottom: 1px solid #f0f2f0;
+}
+
+.all-tournaments-modal__head small {
+    color: #e56e33;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 1.4px;
+}
+
+.all-tournaments-modal__head h2 {
+    font: 800 26px Manrope, sans-serif;
+    letter-spacing: -0.6px;
+    color: #142a2b;
+    margin: 6px 0 0;
+}
+
+.all-tournaments-modal__list {
+    padding: 16px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ---------- Строка турнира в модалке ---------- */
+
+.at-row {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #fafbfa;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.at-row:hover {
+    background: #fff3ec;
+}
+
+.at-row__cover {
+    width: 100px;
+    height: 70px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #e6e9e6;
+    flex-shrink: 0;
+}
+
+.at-row__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.at-row__text small {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #2d7764;
+    margin-bottom: 4px;
+}
+
+.at-row__text h3 {
+    font: 700 15px/1.3 Manrope, sans-serif;
+    color: #142a2b;
+    margin: 0 0 4px;
+}
+
+.at-row__text span {
+    font-size: 11px;
+    color: #89938f;
+}
+
+.at-row__count {
+    text-align: center;
+    padding: 0 12px;
+}
+
+.at-row__count b {
+    display: block;
+    font: 800 20px Manrope, sans-serif;
+    color: #df6a30;
+}
+
+.at-row__count small {
+    font-size: 9px;
+    color: #89938f;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- Карточка "Все турниры" — 4-я ячейка в сетке ---------- */
+
+.show-all-card {
+    background: #fff8f2;
+    border: 2px dashed #df6a30;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: 0.25s;
+    min-height: 380px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.show-all-card:hover {
+    background: #fff1e6;
+    border-color: #d86326;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(223, 106, 48, 0.18);
+}
+
+.show-all-inner {
+    text-align: center;
+    color: #df6a30;
+    position: relative;
+    z-index: 1;
+}
+
+.show-all-plus {
+    display: block;
+    font: 800 56px Manrope, sans-serif;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 14px;
+    color: #df6a30;
+}
+
+.show-all-inner b {
+    display: block;
+    font: 800 18px Manrope, sans-serif;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+    color: #142a2b;
+}
+
+.show-all-inner small {
+    font-size: 11px;
+    color: #df6a30;
+    letter-spacing: 0.3px;
+}
+
+/* ---------- Мобильная адаптация ---------- */
+
+@media (max-width: 900px) {
+    .all-tournaments-modal__card {
+        width: calc(100% - 32px);
+    }
+
+    .all-tournaments-modal__head {
+        padding: 24px 60px 14px 24px;
+    }
+
+    .all-tournaments-modal__list {
+        padding: 14px 24px 24px;
+    }
+}
+
+@media (max-width: 650px) {
+    .all-tournaments-modal__card {
+        width: calc(100% - 16px);
+        margin: 3vh auto 0;
+        max-height: 94vh;
+    }
+
+    .all-tournaments-modal__head {
+        padding: 22px 52px 14px 20px;
+    }
+
+    .all-tournaments-modal__head h2 {
+        font-size: 20px;
+    }
+
+    .all-tournaments-modal__list {
+        padding: 12px 16px 20px;
+    }
+
+    .at-row {
+        grid-template-columns: 70px 1fr auto;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .at-row__cover {
+        width: 70px;
+        height: 55px;
+    }
+
+    .at-row__text h3 {
+        font-size: 13px;
+    }
+
+    .at-row__count {
+        padding: 0 6px;
+    }
+
+    .at-row__count b {
+        font-size: 16px;
+    }
+
+    .show-all-card {
+        min-height: 260px;
+        padding: 24px;
+    }
+
+    .show-all-plus {
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    .show-all-inner b {
+        font-size: 16px;
+    }
+}

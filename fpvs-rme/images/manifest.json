@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-10-14T06:47:54.223Z",
+  "root": "images",
+  "tree": {
+    "files": [
+      "hero.jpg",
+      "logo.jpg",
+      "sergey.jpg"
+    ],
+    "dirs": {
+      "news": {
+        "files": [],
+        "dirs": {
+          "festival-yunosheskih": {
+            "files": [
+              "1.jpg"
+            ],
+            "dirs": {}
+          },
+          "grant": {
+            "files": [
+              "1.jpg",
+              "2.jpg",
+              "3.jpg",
+              "4.jpg",
+              "5.jpg",
+              "6.jpg"
+            ],
+            "dirs": {}
+          },
+          "kubok-sodruzhestva": {
+            "files": [
+              "1.jpg"
+            ],
+            "dirs": {}
+          }
+        }
+      },
+      "tournaments": {
+        "files": [],
+        "dirs": {
+          "druzhba-narodov-rossii": {
+            "files": [
+              "6U1QXNq2oiId1ylbi3Mh8eDtdhAaVSskMJw0brellY9N4a4Pk5pmziH303zbSc8dFbz5bBFBhn84NHyMWEr-XYxg.jpg",
+              "35NamalX74iDz0q5bdBitMNwn6iz8IfEe-5zr2llj0tmEP2EEK0usF5L7OxfwdVxSdKhy3p3r2BwDwA-V0DzlB5Q.jpg",
+              "cover.jpg",
+              "DdRNwS81Zj_oQoYMGa9K3Mk5QlujdizoCeU_mnSgL_rlc9F1ADuN6T33t_vzZv6DjlHPMbzE_Z5KsdV5p2Q68lmx.jpg",
+              "Fw2LhM3XBeOJc3wKdryTj_Y8-sGX2K6t0y1TPvVYUI6FFc0Oi5KC8I2sbiqVdAZJNF711PDTL403463YTt6igWCE.jpg",
+              "pfMgn1WdDTLJb6slvCm4Ife6sXrqPEQpP6KeBGStiQjoK6g8dty4nS4T3QVMxNj8E7BTSC6aD3adUUSLhsCY0cik.jpg",
+              "qMfXxPju8WTpPMUA9OFURsy6GTxaqL13O2NyCGDEvAT3oMTFm0JnkgzSuc_-wTDboJK2V71iDlRWnGGYSovbXfJM.jpg",
+              "Rpazn7bzeUWKdWJ6-vHBZ3L6KNam8B79moOzRTz9YgxeLjw-aBRiPzJcDJnggIlg28Zy38JtUQFPBOEuPN-d5UTS.jpg",
+              "V1xrrOZGjFniIZLi51_0R3cRxUYlTDHvU654isaiRUXDM7M8dEpXgug_kwrEkXklsIxuobuj90lG2BRn0almYxhh.jpg"
+            ],
+            "dirs": {}
+          },
+          "festival-plyazhnyj-futbol": {
+            "files": [
+              "cover.jpg"
+            ],
+            "dirs": {}
+          },
+          "kubok-sodruzhestva": {
+            "files": [
+              "cover.jpg"
+            ],
+            "dirs": {}
+          },
+          "zharkie-dyuny-kod-krasnyj": {
+            "files": [
+              "4SobF93tIYViTd-sWxwPQA-DlwR9IWoivNbMCJN2XWKE5wL7qcz6q2ET9wDkt4quCLtzsmYUuwnqqZUCfaKqj9CZ.jpg",
+              "7rE9vnaFZ7Pf4CjPMOUH7JHXFuPgJ4ZUPZpH5ZJ4k14zSKlSoX1PptO2OKCXUjY7V4dSH8aO-xfziifgHKTtLIvj.jpg",
+              "79Q4_90oLyByC_5a9KMHpBvLOd0TOjb-FDSem9zz7ftxe-zhyfLzVZscF2Fu6Ha6-YqDPeqcYzrRWuYNunCRnvUm.jpg",
+              "b-0Mj6fB4pF_e631rJ3Jy8RRDgIP1L0qRuU2Y04qqSmxiHsFelNQXk8hbZZNqFTvYXFe-5QxS-1oGDIHcd-xV2nL.jpg",
+              "BO2c307q1NftdHTIDUIeN-zGUbyp8IGxy69BkC2SmmIGJpHkaMAeQJVH0j45mk8SUXdnWq8_--zvJiHTFuNqvRvk.jpg",
+              "cover.jpg",
+              "I7vo_VoT4epGp6ZtZNTed7ZnEUMp1B0BXlM6EIXlk9YGfJ94yMkhu_xBnWlcqF-rdW4HaH5N9s1qmTfjg9hON2XL.jpg",
+              "iN796DIV7O8QIqpUwvUm1C8gZ4iiFlnXy-7bYYgV0jVahZT0Deil1Ca2QD_FM4de3MatTcRn88yNk1mLJAW_bjPr.jpg",
+              "josSJTxGA1RoVPbnwO0H3eoZFL1BRK-SwqfV-8mY4PNPe20IYzx4pRYAC1wbJCKpBX2Xe7ou8uPLXsI1SVvqGxby.jpg",
+              "pidXi8431sxELQq4wi2hIZgpQO_flUCH3eibSRZdB8BFqOhFfAmgMC66WwhK2IA-t13ncLWyAP2OW_STRK9XF-ed.jpg",
+              "QK0Zvh2J1Fcj801aV7_P2ChJZ7S6L22PGJcicVZwNcP6i0WlWnoKs_qisHK_VFYhh_2jCE6F1Be8JwnSsWCAn1fP.jpg",
+              "UdCNfZiZpZvD2j7L2sbKhgB01WBbth1S4UgSn0HUZcHw82E44VNd8LTQEEfCutiPawV6BZSxIpLLy2QejKlce-qK.jpg",
+              "w8QbrMOFFjiwLbtSjV9Wbw2NavXMs6OwCJJl5HirPIz_Xhwn6jwkKbN2bEbIoeHrZcW_DnEzcC3erMSAZslttXTp.jpg",
+              "wdYupobfPfQhY5bbmc777FFkNCHrFQXVi91d9nmgyRbZ27BSsURxc9h9hwx1xHBhkChJOMyLy_k3Cre7AcHscdKk.jpg",
+              "yXyXWzZtt9eTxz6iRYTGah3rgeYMr6oARmR0OIkSfzhyfgw3ysVdQV9c3siCyFXN7bUvPQm11r5DovA9nizWlK_D.jpg",
+              "Z4mSV5h3OIN163D6w4B_jScfhK5vRcOHx9nw-h66cskG1WGpaJzaOX4mWael7_EX-h54zb0QbokFxV_VKGliaPzu.jpg",
+              "zmS4fT82TulQQG3_EVaSVX1j50kzcpxEPu75krad_8jWQFd4V7vavKWkd3YzoSlpD64maqW17k0_fNXJ49vb0Zfh.jpg"
+            ],
+            "dirs": {}
+          }
+        }
+      }
+    }
+  }
+}

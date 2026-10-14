@@ -1,0 +1,283 @@
+/* ================================================================
+ *  ФОТО — превью на главной + модалка "Все фотографии"
+ * ================================================================ */
+
+/* ---------- Превью на главной ---------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 320px;
+  gap: 12px;
+}
+
+.gallery figure {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: zoom-in;
+}
+
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.35s;
+  display: block;
+}
+
+.gallery figure:hover img {
+  transform: scale(1.04);
+}
+
+.gallery figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30px 14px 12px;
+  color: white;
+  background: linear-gradient(transparent, #000b);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 10px;
+  gap: 8px;
+}
+
+.gallery figcaption b {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gallery figcaption span {
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* ---------- Кнопка "Все фотографии" ---------- */
+
+.gallery-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0 0;
+}
+
+.gallery-footer[hidden] {
+  display: none;
+}
+
+.show-all-photos {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px dashed #df6a30;
+  background: #fff8f2;
+  color: #df6a30;
+  border-radius: 12px;
+  padding: 14px 22px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.show-all-photos:hover {
+  background: #fff1e6;
+  border-color: #d86326;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(223, 106, 48, 0.18);
+}
+
+.show-all-photos b {
+  background: #df6a30;
+  color: #fff;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+}
+
+/* ---------- Модалка "Все фотографии" ---------- */
+
+.all-photos-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: none;
+}
+
+.all-photos-modal.open {
+  display: block;
+}
+
+.all-photos-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 30, 30, 0.78);
+  backdrop-filter: blur(3px);
+}
+
+.all-photos-modal__card {
+  position: relative;
+  max-width: 1200px;
+  width: calc(100% - 40px);
+  max-height: 92vh;
+  margin: 4vh auto 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  overflow-y: auto;
+  animation: pm-rise 0.25s ease;
+}
+
+.all-photos-modal__close {
+  position: fixed;
+  top: calc(4vh + 14px);
+  right: calc((100% - min(1200px, 100% - 40px)) / 2 + 14px);
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(20, 42, 43, 0.85);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  transition: 0.15s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.all-photos-modal__close:hover {
+  background: #142a2b;
+}
+
+.all-photos-modal__head {
+  padding: 28px 32px 12px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+  border-bottom: 1px solid #f0f2f0;
+}
+
+.all-photos-modal__head small {
+  color: #e56e33;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+}
+
+.all-photos-modal__head h2 {
+  font: 800 26px Manrope, sans-serif;
+  letter-spacing: -0.6px;
+  color: #142a2b;
+  margin: 6px 0 0;
+}
+
+.all-photos-modal__list {
+  padding: 20px 32px 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.all-photos-modal__list figure {
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #e6e9e6;
+  cursor: zoom-in;
+}
+
+.all-photos-modal__list figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: 0.3s;
+}
+
+.all-photos-modal__list figure:hover img {
+  transform: scale(1.05);
+}
+
+/* Заголовок-разделитель между альбомами */
+.all-photos__album {
+  grid-column: 1 / -1;
+  padding: 22px 0 6px;
+  font: 800 14px Manrope, sans-serif;
+  color: #142a2b;
+  border-bottom: 2px solid #f0f2f0;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.all-photos__album:first-child {
+  padding-top: 0;
+}
+
+.all-photos__album small {
+  font: 600 11px Inter, sans-serif;
+  color: #89938f;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Мобильная адаптация ---------- */
+
+@media (max-width: 900px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 240px;
+  }
+
+  .all-photos-modal__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 260px;
+  }
+
+  .all-photos-modal__card {
+    width: calc(100% - 16px);
+    margin: 2vh auto 0;
+    max-height: 96vh;
+  }
+
+  .all-photos-modal__close {
+    top: calc(2vh + 8px);
+    right: 16px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .all-photos-modal__head {
+    padding: 22px 20px 10px;
+  }
+
+  .all-photos-modal__head h2 {
+    font-size: 20px;
+  }
+
+  .all-photos-modal__list {
+    padding: 14px 16px 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .all-photos__album {
+    font-size: 12px;
+    padding: 16px 0 6px;
+  }
+}
