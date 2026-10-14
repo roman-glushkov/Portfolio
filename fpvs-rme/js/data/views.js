@@ -1,5 +1,6 @@
 /* ================================================================
- *  Счётчик уникальных посещений (Appwrite page_views)
+ *  СЧЁТЧИК ПОСЕЩЕНИЙ
+ *  Каждый заход увеличивает count. Уникальные считаются по visitorId.
  * ================================================================ */
 
 (function () {
@@ -28,13 +29,13 @@
     let id = null;
     try {
       id = localStorage.getItem(VISITOR_KEY);
-    } catch (e) {}
+    } catch (e) { }
 
     if (!id) {
       id = randomId(20);
       try {
         localStorage.setItem(VISITOR_KEY, id);
-      } catch (e) {}
+      } catch (e) { }
     }
     return id;
   }
@@ -47,30 +48,64 @@
     const date = getToday();
     const documentId = `${visitorId}_${date}`;
 
-    const url = `${config.endpoint.replace(/\/+$/, "")}/tablesdb/${config.databaseId}/tables/page_views/rows`;
+    const base = config.endpoint.replace(/\/+$/, "");
+    const rowsUrl = `${base}/tablesdb/${config.databaseId}/tables/page_views/rows`;
+    const rowUrl = `${rowsUrl}/${documentId}`;
 
+    const headers = {
+      "Content-Type": "application/json",
+      "X-Appwrite-Project": config.projectId,
+    };
+
+    // 1. Пробуем создать новую запись
     try {
-      const res = await fetch(url, {
+      const res = await fetch(rowsUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Appwrite-Project": config.projectId,
-        },
+        headers,
         body: JSON.stringify({
           rowId: documentId,
-          data: { visitorId, date },
+          data: { visitorId, date, count: 1 },
         }),
       });
 
       if (res.status === 201) {
-        console.log("[views] Новое посещение зафиксировано:", documentId);
-      } else if (res.status === 409) {
-        console.log("[views] Этот посетитель уже был сегодня");
-      } else {
-        console.warn("[views] Appwrite ответил статусом", res.status);
+        console.log("[views] Новое посещение:", documentId);
+        return;
       }
+
+      if (res.status === 409) {
+        // Запись уже есть — увеличиваем count
+        await incrementCount(rowUrl, headers);
+        return;
+      }
+
+      console.warn("[views] Appwrite ответил:", res.status);
     } catch (e) {
-      console.warn("[views] Не удалось записать посещение:", e.message);
+      console.warn("[views] Ошибка:", e.message);
+    }
+  }
+
+  async function incrementCount(rowUrl, headers) {
+    try {
+      // Получаем текущую запись
+      const getRes = await fetch(rowUrl, { headers });
+      if (!getRes.ok) return;
+
+      const row = await getRes.json();
+      const newCount = (row.count || 1) + 1;
+
+      // Обновляем
+      await fetch(rowUrl, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({
+          data: { count: newCount },
+        }),
+      });
+
+      console.log("[views] count →", newCount);
+    } catch (e) {
+      console.warn("[views] Не удалось увеличить count:", e.message);
     }
   }
 
