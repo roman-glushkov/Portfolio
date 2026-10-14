@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T06:47:54.223Z",
+  "generatedAt": "2026-10-14T09:12:55.522Z",
   "root": "images",
   "tree": {
     "files": [
@@ -84,6 +84,12 @@
               "yXyXWzZtt9eTxz6iRYTGah3rgeYMr6oARmR0OIkSfzhyfgw3ysVdQV9c3siCyFXN7bUvPQm11r5DovA9nizWlK_D.jpg",
               "Z4mSV5h3OIN163D6w4B_jScfhK5vRcOHx9nw-h66cskG1WGpaJzaOX4mWael7_EX-h54zb0QbokFxV_VKGliaPzu.jpg",
               "zmS4fT82TulQQG3_EVaSVX1j50kzcpxEPu75krad_8jWQFd4V7vavKWkd3YzoSlpD64maqW17k0_fNXJ49vb0Zfh.jpg"
+            ],
+            "dirs": {}
+          },
+          "zimnij-turnir-2027": {
+            "files": [
+              "cover.jpg"
             ],
             "dirs": {}
           }

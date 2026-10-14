@@ -4,6 +4,7 @@
  * ================================================================ */
 
 import { appwriteList } from "../core/appwrite.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 const HOT_STATUSES = ["Скоро", "Регистрация", "Идёт"];
 const DEFAULT_PLACE = "Йошкар-Ола";
@@ -22,7 +23,7 @@ const SPORT_LABELS = {
 };
 
 let ALL_EVENTS = [];
-let currentFilter = ""; // "" | "football" | "volleyball"
+let currentFilter = "";
 
 export async function loadCalendar() {
   const list = document.getElementById("calendarList");
@@ -30,12 +31,9 @@ export async function loadCalendar() {
 
   const items = await appwriteList("calendar", { orderDesc: "date", limit: 200 });
 
-  // Свежие сверху
   ALL_EVENTS = items.sort((a, b) => (a.date < b.date ? 1 : -1));
 
-  // Фильтры — ТОЛЬКО в модалке
   initModalFilters();
-
   render();
 }
 
@@ -82,11 +80,9 @@ function render() {
     return;
   }
 
-  // На главной показываем только PREVIEW_COUNT свежих
   const preview = ALL_EVENTS.slice(0, PREVIEW_COUNT);
   list.innerHTML = preview.map(renderEvent).join("");
 
-  // Кнопка "Все события" — если есть что показать ещё
   if (footer && totalEl) {
     if (ALL_EVENTS.length > PREVIEW_COUNT) {
       footer.hidden = false;
@@ -103,13 +99,12 @@ function render() {
   }
 }
 
-/* ---------- Модалка "Все события" ---------- */
+/* ---------- Модалка ---------- */
 
 function openAllEventsModal() {
   const modal = document.getElementById("allEventsModal");
   if (!modal) return;
 
-  // Сбрасываем фильтр при каждом открытии
   currentFilter = "";
   syncModalFiltersUI();
   renderModalList(getFiltered());
@@ -121,14 +116,17 @@ function openAllEventsModal() {
   modal.querySelectorAll("[data-all-events-close]").forEach((el) => {
     el.onclick = closeAllEventsModal;
   });
+
+  modalOpened("allEvents");
 }
 
 export function closeAllEventsModal() {
   const modal = document.getElementById("allEventsModal");
-  if (!modal) return;
+  if (!modal || !modal.classList.contains("open")) return;
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  modalClosed("allEvents");
 }
 
 export function isAllEventsModalOpen() {
@@ -185,15 +183,11 @@ function renderEvent(e) {
   `;
 }
 
-/* ---------- Вычисление статуса ---------- */
-
 function autoStatus(iso) {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayIso = toIso(today);
-
   if (iso < todayIso) return "Прошло";
   if (iso === todayIso) return "Идёт";
   return "Скоро";
@@ -215,8 +209,6 @@ function statusToClass(status) {
     default: return "";
   }
 }
-
-/* ---------- Утилиты ---------- */
 
 function parseDate(iso) {
   if (!iso) return null;

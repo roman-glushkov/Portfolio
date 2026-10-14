@@ -22,9 +22,13 @@ export function openLeadModal(id) {
   document.getElementById("lmDate").textContent = date;
   document.getElementById("lmPhone").textContent = lead.phone || "—";
   document.getElementById("lmTopic").textContent = lead.topic || "—";
+
   setOptionalField("lmTeamWrap", "lmTeam", lead.teamName);
+  setOptionalField("lmPlayersWrap", "lmPlayers", lead.players);
   setOptionalField("lmTournamentWrap", "lmTournament", lead.tournament);
+  setOptionalField("lmTournamentSlugWrap", "lmTournamentSlug", lead.tournamentSlug);
   setOptionalField("lmMessageWrap", "lmMessage", lead.message);
+
   document.getElementById("lmStatus").textContent =
     lead.status === "processed" ? "Обработано" : "Новая";
 
@@ -42,6 +46,7 @@ export function closeLeadModal() {
 
 function setOptionalField(wrapperId, valueId, value) {
   const wrapper = document.getElementById(wrapperId);
+  if (!wrapper) return;
   if (!value) {
     wrapper.style.display = "none";
     return;

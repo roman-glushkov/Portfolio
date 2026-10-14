@@ -30,8 +30,14 @@ function renderLeads(rows) {
 
   wrap.innerHTML = `<table>
     <thead><tr>
-      <th>Дата</th><th>Имя</th><th>Телефон</th><th>Тема</th>
-      <th>Команда</th><th>Статус</th><th></th>
+      <th>Дата</th>
+      <th>Имя</th>
+      <th>Телефон</th>
+      <th>Тема</th>
+      <th>Турнир</th>
+      <th>Команда</th>
+      <th>Статус</th>
+      <th></th>
     </tr></thead>
     <tbody>${rows.map(renderRow).join("")}</tbody>
   </table>`;
@@ -54,6 +60,7 @@ function renderRow(lead) {
     <td>${escapeHtml(lead.name || "—")}</td>
     <td>${escapeHtml(lead.phone || "—")}</td>
     <td>${escapeHtml(lead.topic || "—")}</td>
+    <td>${escapeHtml(lead.tournament || "—")}</td>
     <td>${escapeHtml(lead.teamName || "—")}</td>
     <td><span class="status-badge ${processed ? "status-processed" : "status-new"}">
       ${processed ? "Обработано" : "Новая"}

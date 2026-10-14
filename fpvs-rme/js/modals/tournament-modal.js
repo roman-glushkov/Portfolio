@@ -3,6 +3,7 @@
  * ================================================================ */
 
 import { openLightbox } from "../ui/lightbox.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 export function showTournament(tournament) {
     if (!tournament) return;
@@ -46,14 +47,17 @@ export function showTournament(tournament) {
     modal.querySelectorAll("[data-album-close]").forEach((el) => {
         el.onclick = closeTournamentModal;
     });
+
+    modalOpened("tournament");
 }
 
 export function closeTournamentModal() {
     const modal = document.getElementById("albumModal");
-    if (!modal) return;
+    if (!modal || !modal.classList.contains("open")) return;
     modal.classList.remove("open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    modalClosed("tournament");
 }
 
 export function isTournamentModalOpen() {

@@ -5,6 +5,7 @@
 import { formatNewsDate } from "../core/dates.js";
 import { findNewsById } from "../data/news-store.js";
 import { openLightbox } from "../ui/lightbox.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 export function openNewsPost(slug) {
   const post = findNewsById(slug);
@@ -55,14 +56,17 @@ export function openNewsPost(slug) {
   modal.querySelectorAll("[data-post-close]").forEach((el) => {
     el.onclick = closePostModal;
   });
+
+  modalOpened("post");
 }
 
 export function closePostModal() {
   const modal = document.getElementById("postModal");
-  if (!modal) return;
+  if (!modal || !modal.classList.contains("open")) return;
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  modalClosed("post");
 }
 
 export function isPostModalOpen() {

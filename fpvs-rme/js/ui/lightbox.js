@@ -4,6 +4,7 @@
  * ================================================================ */
 
 import { $ } from "../core/dom.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 const lightbox = { album: null, index: 0 };
 let keyboardBound = false;
@@ -15,6 +16,7 @@ export function openLightbox(photos, index) {
   renderLightbox();
   $("#lightbox")?.classList.add("open");
   bindKeyboard();
+  modalOpened("lightbox");
 }
 
 function renderLightbox() {
@@ -27,7 +29,10 @@ function renderLightbox() {
 }
 
 export function closeLightbox() {
-  $("#lightbox")?.classList.remove("open");
+  const lb = $("#lightbox");
+  if (!lb || !lb.classList.contains("open")) return;
+  lb.classList.remove("open");
+  modalClosed("lightbox");
 }
 
 function nextPhoto() {

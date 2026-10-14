@@ -1,17 +1,15 @@
 /* ================================================================
  *  ГАЛЕРЕЯ — сборка всех фото проекта с датами
- *  Использует manifest.json + Appwrite (для дат турниров/новостей)
  * ================================================================ */
 
 import { appwriteList } from "../core/appwrite.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 const PREVIEW_COUNT = 3;
 
-// 3 закреплённых фото — всегда сверху
 const PINNED = [
     { src: "images/hero.jpg", albumTitle: "ФПВС РМЭ", date: "" },
     { src: "images/logo.jpg", albumTitle: "ФПВС РМЭ", date: "" },
-    { src: "images/sergey.jpg", albumTitle: "Сергей Канашин", date: "" },
 ];
 
 let ALL_PHOTOS = [];
@@ -29,7 +27,6 @@ export async function loadGallery() {
         return;
     }
 
-    // Параллельно тянем турниры и новости, чтобы знать даты
     const [tournaments, news] = await Promise.all([
         appwriteList("tournaments", { orderDesc: "dateSort", limit: 100 }),
         appwriteList("news", { orderDesc: "date", limit: 100 }),
@@ -37,14 +34,11 @@ export async function loadGallery() {
 
     ALL_PHOTOS = buildPhotoList(tournaments, news);
 
-    // Обновляем счётчик
     if (totalEl) totalEl.textContent = ALL_PHOTOS.length.toLocaleString("ru-RU");
 
-    // На главной — только первые PREVIEW_COUNT
     const preview = ALL_PHOTOS.slice(0, PREVIEW_COUNT);
     grid.innerHTML = preview.map((p, i) => renderFigure(p, i)).join("");
 
-    // Клик по превью — открывает лайтбокс с этими же 3 фото
     const previewLb = preview.map((p) => ({
         src: p.src,
         albumTitle: p.albumTitle,
@@ -58,7 +52,6 @@ export async function loadGallery() {
         };
     });
 
-    // Кнопка "Все фотографии"
     if (footer) {
         if (ALL_PHOTOS.length > PREVIEW_COUNT) {
             footer.hidden = false;
@@ -75,20 +68,15 @@ export async function loadGallery() {
     }
 }
 
-/* ---------- Сборка плоского списка ---------- */
-
 function buildPhotoList(tournaments, news) {
     const list = [];
 
-    // 1. Закреплённые
     PINNED.forEach((p) => list.push(p));
 
-    // 2. Турниры — из манифеста по slug
     tournaments.forEach((t) => {
         const files = getFilesFromManifest(["tournaments", t.slug]);
         if (!files.length) return;
 
-        // cover.jpg первым
         const cover = files.find((f) => /^cover\.jpg$/i.test(f));
         const ordered = cover ? [cover, ...files.filter((f) => f !== cover)] : files;
 
@@ -102,7 +90,6 @@ function buildPhotoList(tournaments, news) {
         });
     });
 
-    // 3. Новости
     news.forEach((n) => {
         const files = getFilesFromManifest(["news", n.slug]);
         if (!files.length) return;
@@ -117,8 +104,6 @@ function buildPhotoList(tournaments, news) {
         });
     });
 
-    // 4. Сортируем по дате DESC (свежие сверху).
-    // Закреплённые — наверху, у них sortKey пустой.
     const pinned = list.filter((p) => p.sortKey === "");
     const rest = list.filter((p) => p.sortKey !== "");
 
@@ -148,8 +133,6 @@ async function fetchManifest() {
     }
 }
 
-/* ---------- Рендер превью на главной ---------- */
-
 function renderFigure(photo, index) {
     const dateLabel = formatDateShort(photo.date);
 
@@ -163,8 +146,6 @@ function renderFigure(photo, index) {
     </figure>
   `;
 }
-
-/* ---------- Модалка "Все фотографии" ---------- */
 
 function openAllPhotosModal() {
     const modal = document.getElementById("allPhotosModal");
@@ -194,23 +175,23 @@ function openAllPhotosModal() {
     modal.querySelectorAll("[data-all-photos-close]").forEach((el) => {
         el.onclick = closeAllPhotosModal;
     });
+
+    modalOpened("allPhotos");
 }
 
 export function closeAllPhotosModal() {
     const modal = document.getElementById("allPhotosModal");
-    if (!modal) return;
+    if (!modal || !modal.classList.contains("open")) return;
     modal.classList.remove("open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    modalClosed("allPhotos");
 }
 
 export function isAllPhotosModalOpen() {
     return document.getElementById("allPhotosModal")?.classList.contains("open") || false;
 }
 
-/**
- * В модалке — плоский список с разделителями по альбому.
- */
 function renderModalPhoto(photo, index) {
     const prev = index > 0 ? ALL_PHOTOS[index - 1] : null;
     const showAlbumHeader = !prev || prev.albumTitle !== photo.albumTitle;
@@ -226,8 +207,6 @@ function renderModalPhoto(photo, index) {
     </figure>
   `;
 }
-
-/* ---------- Утилиты ---------- */
 
 const MONTHS_SHORT = [
     "янв", "фев", "мар", "апр", "май", "июн",

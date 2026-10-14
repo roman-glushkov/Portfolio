@@ -139,3 +139,42 @@
   line-height: 1.5;
 }
 
+/* ---------- Блок выбора турнира ---------- */
+
+.contacts form .form-tournament-fields {
+  display: block;
+  padding: 12px;
+  margin: 2px 0 10px;
+  border: 1px solid #d6e5e0;
+  border-radius: 8px;
+  background: #f7fbfa;
+}
+
+.contacts form .form-tournament-fields[hidden] {
+  display: none;
+}
+
+.contacts form #customTournamentBlock {
+  margin-top: 8px;
+}
+
+.contacts form #customTournamentBlock[hidden] {
+  display: none;
+}
+
+/* ---------- Поля игроков ---------- */
+
+.contacts form #playersBlock {
+  margin-top: 10px;
+}
+
+.contacts form #playersBlock input[readonly] {
+  background: #f5f6f3;
+  color: #52615d;
+  cursor: default;
+}
+
+.contacts form #playersBlock .form-label {
+  margin-top: 12px;
+  margin-bottom: 6px;
+}

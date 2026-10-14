@@ -13,6 +13,7 @@ import { closePostModal, isPostModalOpen } from "./modals/post-modal.js";
 import { closeTournamentModal, isTournamentModalOpen } from "./modals/tournament-modal.js";
 import { closeAllTournaments, isAllTournamentsOpen } from "./modals/all-tournaments-modal.js";
 import { loadGallery, closeAllPhotosModal, isAllPhotosModalOpen } from "./data/gallery.js";
+import { registerModal, modalOpened, modalClosed } from "./core/modals.js";
 
 async function startSite() {
   await loadPartials();
@@ -21,6 +22,12 @@ async function startSite() {
   initSmoothScroll();
   initLightbox();
 
+  registerModal("lightbox", closeLightbox, isLightboxOpen);
+  registerModal("tournament", closeTournamentModal, isTournamentModalOpen);
+  registerModal("allTournaments", closeAllTournaments, isAllTournamentsOpen);
+  registerModal("allEvents", closeAllEventsModal, isAllEventsModalOpen);
+  registerModal("allPhotos", closeAllPhotosModal, isAllPhotosModalOpen);
+  registerModal("post", closePostModal, isPostModalOpen);
   // Параллельно грузим данные — быстрее
   await Promise.all([
     loadTournaments(),

@@ -1,66 +1,81 @@
-    <!-- КОНТАКТЫ -->
-    <section class="section" id="contacts">
-      <div class="wrap contacts">
+<!-- КОНТАКТЫ -->
+<section class="section" id="contacts">
+  <div class="wrap contacts">
+    <div>
+      <small>КОНТАКТЫ</small>
+      <h2>Давайте развивать спорт вместе</h2>
+      <div class="contact-list">
         <div>
-          <small>КОНТАКТЫ</small>
-          <h2>Давайте развивать спорт вместе</h2>
-          <div class="contact-list">
-            <div>
-              <small>Председатель</small><b>Сергей Канашин</b>
-              <a href="tel:+79177103440">+7 (917) 710-34-40</a>
-            </div>
-            <div>
-              <small>Федерация</small><b>+7 (902) 103-28-78</b>
-              <a href="mailto:mari12fpvs@mail.ru">mari12fpvs@mail.ru</a>
-            </div>
-            <div>
-              <small>Адрес</small><b>Йошкар-Ола, Ленинский пр-кт, д. 15д</b>
-              <span>Пн–Пт · 9:00–17:00</span>
-            </div>
-          </div>
+          <small>Председатель</small><b>Сергей Канашин</b>
+          <a href="tel:+79177103440">+7 (917) 710-34-40</a>
         </div>
-        <form id="form">
-          <h3>Оставить заявку</h3>
-
-          <label class="form-label" for="leadName">Имя / ФИО капитана *</label>
-          <input id="leadName" name="name" autocomplete="name" maxlength="120" placeholder="Как к вам обращаться"
-            required />
-
-          <label class="form-label" for="leadPhone">Телефон для связи *</label>
-          <input id="leadPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32"
-            placeholder="+7 (___) ___-__-__" required />
-
-          <label class="form-label" for="leadTopic">Тема обращения *</label>
-          <select id="leadTopic" name="topic" required>
-            <option value="Хочу узнать о турнире">Хочу узнать о турнире</option>
-            <option value="Хочу принять участие">Хочу принять участие</option>
-            <option value="Хочу стать партнёром">Хочу стать партнёром</option>
-            <option value="Другой вопрос">Другой вопрос</option>
-          </select>
-
-          <div class="form-registration-fields" id="registrationFields" hidden>
-            <label class="form-label" for="teamName">Название команды *</label>
-            <input id="teamName" name="teamName" maxlength="120" placeholder="Название команды" />
-
-            <label class="form-label" for="tournamentName">Турнир</label>
-            <input id="tournamentName" name="tournament" maxlength="180"
-              placeholder="Название турнира, если известно" />
-          </div>
-
-          <label class="form-label" for="leadMessage">Сообщение</label>
-          <textarea id="leadMessage" name="message" maxlength="2500"
-            placeholder="Дополнительная информация (необязательно)"></textarea>
-
-          <div class="form-trap" aria-hidden="true">
-            <label for="leadWebsite">Не заполняйте это поле</label>
-            <input id="leadWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <button class="btn orange" id="leadSubmit" type="submit">Отправить заявку</button>
-          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-          <small class="form-note">
-            Заявка будет сохранена в базе федерации. Телефон используется для ответа на обращение.
-          </small>
-        </form>
+        <div>
+          <small>Федерация</small><b>+7 (902) 103-28-78</b>
+          <a href="mailto:mari12fpvs@mail.ru">mari12fpvs@mail.ru</a>
+        </div>
+        <div>
+          <small>Адрес</small><b>Йошкар-Ола, Ленинский пр-кт, д. 15д</b>
+          <span>Пн–Пт · 9:00–17:00</span>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <form id="form">
+      <h3>Оставить заявку</h3>
+
+      <label class="form-label" for="leadName">Имя / ФИО капитана *</label>
+      <input id="leadName" name="name" autocomplete="name" maxlength="120" placeholder="Как к вам обращаться"
+        required />
+
+      <label class="form-label" for="leadPhone">Телефон для связи *</label>
+      <input id="leadPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32"
+        placeholder="+7 (___) ___-__-__" required />
+
+      <label class="form-label" for="leadTopic">Тема обращения *</label>
+      <select id="leadTopic" name="topic" required>
+        <option value="">— Выберите тему —</option>
+        <option value="Хочу узнать о турнире">Хочу узнать о турнире</option>
+        <option value="Хочу принять участие">Хочу принять участие</option>
+        <option value="Хочу стать партнёром">Хочу стать партнёром</option>
+        <option value="Другой вопрос">Другой вопрос</option>
+      </select>
+
+      <!-- Блок выбора турнира (для "узнать" и "принять участие") -->
+      <div class="form-tournament-fields" id="tournamentFields" hidden>
+        <label class="form-label" for="leadTournament">Турнир *</label>
+        <select id="leadTournament" name="tournament">
+          <option value="">— Выберите турнир —</option>
+        </select>
+
+        <div id="customTournamentBlock" hidden>
+          <label class="form-label" for="leadTournamentCustom">Какой турнир?</label>
+          <input id="leadTournamentCustom" name="tournamentCustom" maxlength="180" placeholder="Название турнира" />
+        </div>
+      </div>
+
+      <!-- Блок для заявки на участие -->
+      <div class="form-registration-fields" id="registrationFields" hidden>
+        <label class="form-label" for="teamName">Название команды *</label>
+        <input id="teamName" name="teamName" maxlength="120" placeholder="Название команды" />
+
+        <!-- Сюда JS вставит N полей для игроков -->
+        <div id="playersBlock"></div>
+      </div>
+
+      <label class="form-label" for="leadMessage">Сообщение</label>
+      <textarea id="leadMessage" name="message" maxlength="2500"
+        placeholder="Дополнительная информация (необязательно)"></textarea>
+
+      <div class="form-trap" aria-hidden="true">
+        <label for="leadWebsite">Не заполняйте это поле</label>
+        <input id="leadWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <button class="btn orange" id="leadSubmit" type="submit">Отправить заявку</button>
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      <small class="form-note">
+        Заявка будет сохранена в базе федерации. Телефон используется для ответа на обращение.
+      </small>
+    </form>
+  </div>
+</section>
