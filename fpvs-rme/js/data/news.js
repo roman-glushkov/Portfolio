@@ -1,7 +1,7 @@
 /* ================================================================
  *  НОВОСТИ (Appwrite collection: news)
- *  Поля: slug, date, tag, title, excerpt, body, featured
- *  Фото — из images/news/<slug>/
+ *  - Клик по фото (коллаж/превью) → лайтбокс только этой фотки
+ *  - Клик по тексту → модалка поста
  * ================================================================ */
 
 import { appwriteList } from "../core/appwrite.js";
@@ -9,6 +9,7 @@ import { getNewsPhotoUrls } from "../core/images.js";
 import { formatNewsDate } from "../core/dates.js";
 import { setNews, getNews } from "./news-store.js";
 import { openNewsPost } from "../modals/post-modal.js";
+import { openLightbox } from "../ui/lightbox.js";
 
 export async function loadNews() {
   const grid = document.getElementById("newsGrid");
@@ -22,7 +23,6 @@ export async function loadNews() {
     return;
   }
 
-  // Подтягиваем фото из manifest по slug
   const enriched = await Promise.all(
     items.map(async (item) => {
       const gallery = await getNewsPhotoUrls(item.slug);
@@ -39,7 +39,10 @@ export async function loadNews() {
   grid.innerHTML = `
     ${renderNewsCard(featured, true)}
     <div class="side">
-      ${rest.slice(0, 2).map((n) => renderNewsCard(n, false)).join("")}
+      ${rest
+        .slice(0, 2)
+        .map((n) => renderNewsCard(n, false))
+        .join("")}
     </div>
   `;
 
@@ -58,7 +61,9 @@ function renderNewsCard(n, isFeatured) {
     return `
       <article class="main-post news-card" data-news-id="${n.slug}">
         ${collage}
-        <div class="news-card__text">
+        <div class="news-card__text" data-news-text="${
+          n.slug
+        }" style="cursor: pointer;">
           <label>${formatNewsDate(n)}${n.tag ? " · " + n.tag : ""}</label>
           <h3>${n.title}</h3>
           <p>${n.excerpt || ""}</p>
@@ -69,13 +74,15 @@ function renderNewsCard(n, isFeatured) {
   }
 
   const thumb = photos.length
-    ? `<img class="side-thumb" src="${photos[0]}" alt="" loading="lazy">`
+    ? `<img class="side-thumb photo-zoomable" src="${photos[0]}" alt="" loading="lazy" data-news-photo="${n.slug}" data-photo-index="0">`
     : `<div class="side-thumb side-thumb--empty"></div>`;
 
   return `
     <article class="side-card news-card" data-news-id="${n.slug}">
       ${thumb}
-      <div class="side-card__text">
+      <div class="side-card__text" data-news-text="${
+        n.slug
+      }" style="cursor: pointer;">
         <label>${formatNewsDate(n)}${n.tag ? " · " + n.tag : ""}</label>
         <h3>${n.title}</h3>
         <a href="#" data-news-open="${n.slug}">Подробнее →</a>
@@ -90,11 +97,12 @@ function renderCollage(photos, newsSlug) {
   const hidden = photos.length - visible.length;
 
   const img = (src, i, cls = "") =>
-    `<img src="${src}" alt="" loading="lazy" class="${cls}"
+    `<img src="${src}" alt="" loading="lazy" class="${cls} photo-zoomable"
           data-photo-index="${i}" data-news-photo="${newsSlug}">`;
 
   if (visible.length === 1) return img(visible[0], 0);
-  if (visible.length === 2) return visible.map((src, i) => img(src, i)).join("");
+  if (visible.length === 2)
+    return visible.map((src, i) => img(src, i)).join("");
   if (visible.length === 3) {
     return `
       ${img(visible[0], 0, "collage-big")}
@@ -105,31 +113,58 @@ function renderCollage(photos, newsSlug) {
     `;
   }
 
-  return visible.slice(0, 4).map((src, i) => {
-    const isLast = i === 3 && hidden > 0;
-    return `
+  return visible
+    .slice(0, 4)
+    .map((src, i) => {
+      const isLast = i === 3 && hidden > 0;
+      return `
       <div class="collage-cell">
         ${img(src, i)}
         ${isLast ? `<span class="collage-more">+${hidden}</span>` : ""}
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 }
 
 function bindNewsClicks(root) {
-  root.querySelectorAll("[data-news-open]").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      openNewsPost(el.dataset.newsOpen);
+  // 1. Клик по фото → лайтбокс одной фотки
+  root.querySelectorAll("img[data-news-photo]").forEach((img) => {
+    img.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const slug = img.dataset.newsPhoto;
+      const post = getNews().find((n) => n.slug === slug);
+      if (!post) return;
+
+      const photos = (post.gallery || []).filter(Boolean);
+      if (!photos.length) return;
+
+      // Открываем все фото поста в лайтбоксе, но начинаем с того, на которое кликнули
+      const idx = parseInt(img.dataset.photoIndex, 10) || 0;
+      const lbPhotos = photos.map((src) => ({
+        src,
+        albumTitle: post.title,
+        date: post.date,
+      }));
+      openLightbox(lbPhotos, idx);
     });
   });
 
-  root.querySelectorAll("[data-news-id]").forEach((card) => {
-    card.style.cursor = "pointer";
-    card.addEventListener("click", (e) => {
-      if (e.target.closest("img[data-news-photo]")) return;
-      if (e.target.closest("[data-news-open]")) return;
-      openNewsPost(card.dataset.newsId);
+  // 2. Клик по тексту → модалка новости
+  root.querySelectorAll("[data-news-text]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;
+      const slug = el.dataset.newsText;
+      openNewsPost(slug);
+    });
+  });
+
+  // 3. Клик по ссылке "Подробнее"
+  root.querySelectorAll("[data-news-open]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openNewsPost(el.dataset.newsOpen);
     });
   });
 }

@@ -281,3 +281,13 @@
     padding: 16px 0 6px;
   }
 }
+
+/* Курсор-лупа для всех кликабельных фото */
+.gallery figure,
+.cards article > img,
+.post-modal__gallery figure,
+.main-post img,
+.side-thumb,
+.photo-zoomable {
+  cursor: zoom-in;
+}

@@ -7,13 +7,28 @@ import { initForm, initPrefillLinks } from "./forms/lead-form.js";
 import { loadStats } from "./data/stats.js";
 import { initBurger } from "./ui/burger.js";
 import { loadTournaments } from "./data/tournaments.js";
-import { loadCalendar, closeAllEventsModal, isAllEventsModalOpen } from "./data/calendar.js";
+import {
+  loadCalendar,
+  closeAllEventsModal,
+  isAllEventsModalOpen,
+} from "./data/calendar.js";
 import { loadNews } from "./data/news.js";
 import { closePostModal, isPostModalOpen } from "./modals/post-modal.js";
-import { closeTournamentModal, isTournamentModalOpen } from "./modals/tournament-modal.js";
-import { closeAllTournaments, isAllTournamentsOpen } from "./modals/all-tournaments-modal.js";
-import { loadGallery, closeAllPhotosModal, isAllPhotosModalOpen } from "./data/gallery.js";
+import {
+  closeTournamentModal,
+  isTournamentModalOpen,
+} from "./modals/tournament-modal.js";
+import {
+  closeAllTournaments,
+  isAllTournamentsOpen,
+} from "./modals/all-tournaments-modal.js";
+import {
+  loadGallery,
+  closeAllPhotosModal,
+  isAllPhotosModalOpen,
+} from "./data/gallery.js";
 import { registerModal, modalOpened, modalClosed } from "./core/modals.js";
+import { openLightbox } from "./ui/lightbox.js";
 
 async function startSite() {
   await loadPartials();
@@ -22,6 +37,23 @@ async function startSite() {
   initPrefillLinks();
   initSmoothScroll();
   initLightbox();
+
+  // Клик по фото Сергея Канашина → лайтбокс
+  const sergeyImg = document.querySelector("[data-about-photo]");
+  if (sergeyImg) {
+    sergeyImg.addEventListener("click", () => {
+      openLightbox(
+        [
+          {
+            src: "images/sergey.jpg",
+            albumTitle: "Сергей Канашин",
+            date: "",
+          },
+        ],
+        0
+      );
+    });
+  }
 
   registerModal("lightbox", closeLightbox, isLightboxOpen);
   registerModal("tournament", closeTournamentModal, isTournamentModalOpen);
