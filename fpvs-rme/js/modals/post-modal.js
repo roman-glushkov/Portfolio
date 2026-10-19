@@ -7,6 +7,8 @@ import { findNewsById } from "../data/news-store.js";
 import { openLightbox } from "../ui/lightbox.js";
 import { modalOpened, modalClosed } from "../core/modals.js";
 
+let readTimer = null;
+
 export function openNewsPost(slug) {
   const post = findNewsById(slug);
   if (!post) return;
@@ -33,11 +35,15 @@ export function openNewsPost(slug) {
   } else {
     galEl.style.display = "";
     galEl.className = "post-modal__gallery";
-    galEl.innerHTML = photos.map((src, i) => `
+    galEl.innerHTML = photos
+      .map(
+        (src, i) => `
       <figure data-photo-index="${i}">
         <img src="${src}" alt="" loading="lazy">
       </figure>
-    `).join("");
+    `
+      )
+      .join("");
 
     galEl.querySelectorAll("figure").forEach((fig) => {
       fig.style.cursor = "zoom-in";
@@ -58,11 +64,22 @@ export function openNewsPost(slug) {
   });
 
   modalOpened("post");
+
+  // Таймер 7 секунд на прочтение
+  clearTimeout(readTimer);
+  readTimer = setTimeout(() => {
+    if (window.trackNewsRead) {
+      window.trackNewsRead(post.slug);
+    }
+  }, 7000);
 }
 
 export function closePostModal() {
   const modal = document.getElementById("postModal");
   if (!modal || !modal.classList.contains("open")) return;
+
+  clearTimeout(readTimer);
+
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
@@ -70,7 +87,9 @@ export function closePostModal() {
 }
 
 export function isPostModalOpen() {
-  return document.getElementById("postModal")?.classList.contains("open") || false;
+  return (
+    document.getElementById("postModal")?.classList.contains("open") || false
+  );
 }
 
 function openNewsGallery(slug, startIndex = 0) {

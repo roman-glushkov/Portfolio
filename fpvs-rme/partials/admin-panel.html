@@ -1,104 +1,150 @@
 <!-- ========== ЭКРАН ВХОДА ========== -->
 <div class="login-screen" id="loginScreen">
-    <div class="login-card">
-        <h1>Вход в панель</h1>
-        <p>Доступ только для администраторов федерации</p>
-        <form id="loginForm">
-            <label for="email">Email</label>
-            <input id="email" type="email" autocomplete="username" required placeholder="you@example.com">
-            <label for="password">Пароль</label>
-            <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
-            <button class="btn btn-orange btn-full" type="submit" id="loginBtn">Войти</button>
-            <div class="login-error" id="loginError"></div>
-        </form>
-    </div>
+  <div class="login-card">
+    <h1>Вход в панель</h1>
+    <p>Доступ только для администраторов федерации</p>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        required
+        placeholder="you@example.com"
+      />
+      <label for="password">Пароль</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        placeholder="••••••••"
+      />
+      <button class="btn btn-orange btn-full" type="submit" id="loginBtn">
+        Войти
+      </button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
 </div>
 
 <!-- ========== ЭКРАН АДМИНКИ ========== -->
 <div class="admin-screen hidden" id="adminScreen">
-    <div class="wrap">
-        <div class="admin-head">
-            <div>
-                <h1>Панель федерации</h1>
-                <div class="user" id="userInfo"></div>
-            </div>
-            <button class="logout" id="logoutBtn">Выйти</button>
-        </div>
-
-        <!-- ========== ПОСЕТИТЕЛИ ========== -->
-        <h2 class="section-title">Посетители сайта</h2>
-
-        <!-- Табы-переключатель -->
-        <div class="stats-tabs" id="statsTabs">
-            <button class="stats-tab active" data-screen="0">Всего визитов</button>
-            <button class="stats-tab" data-screen="1">Уникальные посетители</button>
-        </div>
-
-        <!-- Слайдер -->
-        <div class="stats-slider" id="statsSlider">
-            <!-- Экран 1: визиты -->
-            <div class="stats-screen" data-screen="0">
-                <div class="stats-grid">
-                    <div class="stat-card"><small>Сегодня</small><b id="statToday">—</b></div>
-                    <div class="stat-card"><small>За 7 дней</small><b id="statWeek">—</b></div>
-                    <div class="stat-card"><small>За 30 дней</small><b id="statMonth">—</b></div>
-                    <div class="stat-card"><small>За год</small><b id="statYear">—</b></div>
-                </div>
-            </div>
-
-            <!-- Экран 2: уникальные -->
-            <div class="stats-screen" data-screen="1">
-                <div class="stats-grid">
-                    <div class="stat-card"><small>Сегодня</small><b id="uniqToday">—</b></div>
-                    <div class="stat-card"><small>За 7 дней</small><b id="uniqWeek">—</b></div>
-                    <div class="stat-card"><small>За 30 дней</small><b id="uniqMonth">—</b></div>
-                    <div class="stat-card"><small>За год</small><b id="uniqYear">—</b></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========== ГРАФИК ========== -->
-        <div class="chart-card">
-            <div class="chart-head">
-                <h2 id="chartTitle">Всего визитов по дням</h2>
-                <div class="period" id="chartPeriod">
-                    <button data-days="7" class="active">7 дней</button>
-                    <button data-days="30">30 дней</button>
-                </div>
-            </div>
-            <div class="chart" id="chart"></div>
-            <div class="chart-labels" id="chartLabels"></div>
-        </div>
-
-        <!-- ========== ЗАЯВКИ ========== -->
-        <h2 class="section-title">Заявки с сайта</h2>
-        <div class="leads-table" id="leadsWrap">
-            <div class="loading">Загружаю заявки…</div>
-        </div>
+  <div class="wrap">
+    <div class="admin-head">
+      <div>
+        <h1>Панель федерации</h1>
+        <div class="user" id="userInfo"></div>
+      </div>
+      <button class="logout" id="logoutBtn">Выйти</button>
     </div>
+
+    <!-- ========== ПОСЕТИТЕЛИ ========== -->
+    <h2 class="section-title">Посетители сайта</h2>
+
+    <!-- Табы-переключатель -->
+    <div class="stats-tabs" id="statsTabs">
+      <button class="stats-tab active" data-screen="0">Всего визитов</button>
+      <button class="stats-tab" data-screen="1">Уникальные посетители</button>
+    </div>
+
+    <!-- Слайдер -->
+    <div class="stats-slider" id="statsSlider">
+      <!-- Экран 1: визиты -->
+      <div class="stats-screen" data-screen="0">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <small>Сегодня</small><b id="statToday">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За 7 дней</small><b id="statWeek">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За 30 дней</small><b id="statMonth">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За год</small><b id="statYear">—</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Экран 2: уникальные -->
+      <div class="stats-screen" data-screen="1">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <small>Сегодня</small><b id="uniqToday">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За 7 дней</small><b id="uniqWeek">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За 30 дней</small><b id="uniqMonth">—</b>
+          </div>
+          <div class="stat-card">
+            <small>За год</small><b id="uniqYear">—</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ГРАФИК ========== -->
+    <div class="chart-card">
+      <div class="chart-head">
+        <h2 id="chartTitle">Всего визитов по дням</h2>
+        <div class="period" id="chartPeriod">
+          <button data-days="7" class="active">7 дней</button>
+          <button data-days="30">30 дней</button>
+        </div>
+      </div>
+      <div class="chart" id="chart"></div>
+      <div class="chart-labels" id="chartLabels"></div>
+    </div>
+
+    <!-- ========== ЧИТАЕМОСТЬ НОВОСТЕЙ ========== -->
+    <h2 class="section-title" style="margin-top: 32px">Читаемость новостей</h2>
+    <div class="leads-table" id="newsStatsWrap" style="margin-bottom: 32px">
+      <div class="loading">Загружаю статистику новостей…</div>
+    </div>
+
+    <!-- ========== ЗАЯВКИ ========== -->
+    <h2 class="section-title">Заявки с сайта</h2>
+    <div class="leads-table" id="leadsWrap">
+      <div class="loading">Загружаю заявки…</div>
+    </div>
+  </div>
 </div>
 
 <!-- ========== МОДАЛКА ЗАЯВКИ ========== -->
 <div class="lead-modal" id="leadModal">
-    <div class="lead-modal__backdrop" data-lead-close></div>
-    <div class="lead-modal__card">
-        <button class="lead-modal__close" data-lead-close aria-label="Закрыть">✕</button>
-        <h2 id="lmName">—</h2>
-        <div class="lead-modal__date" id="lmDate"></div>
+  <div class="lead-modal__backdrop" data-lead-close></div>
+  <div class="lead-modal__card">
+    <button class="lead-modal__close" data-lead-close aria-label="Закрыть">
+      ✕
+    </button>
+    <h2 id="lmName">—</h2>
+    <div class="lead-modal__date" id="lmDate"></div>
 
-        <div class="lead-field"><small>Телефон</small><b id="lmPhone">—</b></div>
-        <div class="lead-field"><small>Тема</small><b id="lmTopic">—</b></div>
-        <div class="lead-field" id="lmTeamWrap"><small>Команда</small><b id="lmTeam">—</b></div>
-        <div class="lead-field" id="lmPlayersWrap"><small>Состав команды</small>
-            <div class="players-text" id="lmPlayers">—</div>
-        </div>
-        <div class="lead-field" id="lmTournamentWrap"><small>Турнир</small><b id="lmTournament">—</b></div>
-        <div class="lead-field" id="lmTournamentSlugWrap"><small>Slug турнира</small><b id="lmTournamentSlug">—</b>
-        </div>
-        <div class="lead-field" id="lmMessageWrap">
-            <small>Сообщение</small>
-            <div class="message-text" id="lmMessage">—</div>
-        </div>
-        <div class="lead-field"><small>Статус</small><span id="lmStatus">—</span></div>
+    <div class="lead-field"><small>Телефон</small><b id="lmPhone">—</b></div>
+    <div class="lead-field"><small>Тема</small><b id="lmTopic">—</b></div>
+    <div class="lead-field" id="lmTeamWrap">
+      <small>Команда</small><b id="lmTeam">—</b>
     </div>
+    <div class="lead-field" id="lmPlayersWrap">
+      <small>Состав команды</small>
+      <div class="players-text" id="lmPlayers">—</div>
+    </div>
+    <div class="lead-field" id="lmTournamentWrap">
+      <small>Турнир</small><b id="lmTournament">—</b>
+    </div>
+    <div class="lead-field" id="lmTournamentSlugWrap">
+      <small>Slug турнира</small><b id="lmTournamentSlug">—</b>
+    </div>
+    <div class="lead-field" id="lmMessageWrap">
+      <small>Сообщение</small>
+      <div class="message-text" id="lmMessage">—</div>
+    </div>
+    <div class="lead-field">
+      <small>Статус</small><span id="lmStatus">—</span>
+    </div>
+  </div>
 </div>

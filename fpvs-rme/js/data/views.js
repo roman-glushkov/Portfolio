@@ -1,6 +1,5 @@
 /* ================================================================
- *  СЧЁТЧИК ПОСЕЩЕНИЙ
- *  Каждый заход увеличивает count. Уникальные считаются по visitorId.
+ *  СЧЁТЧИК ПОСЕЩЕНИЙ И ЧТЕНИЯ НОВОСТЕЙ
  * ================================================================ */
 
 (function () {
@@ -14,13 +13,15 @@
     return `${y}-${m}-${day}`;
   }
 
-  function randomId(len = 20) {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  function randomId(len = 12) {
+    const chars =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const arr = new Uint32Array(len);
     if (window.crypto?.getRandomValues) {
       window.crypto.getRandomValues(arr);
     } else {
-      for (let i = 0; i < len; i++) arr[i] = Math.floor(Math.random() * 0xffffffff);
+      for (let i = 0; i < len; i++)
+        arr[i] = Math.floor(Math.random() * 0xffffffff);
     }
     return Array.from(arr, (v) => chars[v % chars.length]).join("");
   }
@@ -29,13 +30,13 @@
     let id = null;
     try {
       id = localStorage.getItem(VISITOR_KEY);
-    } catch (e) { }
+    } catch (e) {}
 
     if (!id) {
-      id = randomId(20);
+      id = randomId(12);
       try {
         localStorage.setItem(VISITOR_KEY, id);
-      } catch (e) { }
+      } catch (e) {}
     }
     return id;
   }
@@ -57,7 +58,6 @@
       "X-Appwrite-Project": config.projectId,
     };
 
-    // 1. Пробуем создать новую запись
     try {
       const res = await fetch(rowsUrl, {
         method: "POST",
@@ -74,7 +74,6 @@
       }
 
       if (res.status === 409) {
-        // Запись уже есть — увеличиваем count
         await incrementCount(rowUrl, headers);
         return;
       }
@@ -87,14 +86,12 @@
 
   async function incrementCount(rowUrl, headers) {
     try {
-      // Получаем текущую запись
       const getRes = await fetch(rowUrl, { headers });
       if (!getRes.ok) return;
 
       const row = await getRes.json();
       const newCount = (row.count || 1) + 1;
 
-      // Обновляем
       await fetch(rowUrl, {
         method: "PATCH",
         headers,
@@ -109,5 +106,40 @@
     }
   }
 
+  // --- Чтение новостей ---
+  async function trackNewsRead(newsSlug) {
+    const config = window.APPWRITE_CONFIG;
+    if (!config || !newsSlug) return;
+
+    const visitorId = getVisitorId();
+    const date = getToday();
+    const documentId = `${newsSlug}_${visitorId}`; // Уникальный ID, чтобы не накручивать
+
+    const url = `${config.endpoint.replace(/\/+$/, "")}/tablesdb/${
+      config.databaseId
+    }/tables/news_views/rows`;
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Appwrite-Project": config.projectId,
+        },
+        body: JSON.stringify({
+          rowId: documentId,
+          data: { newsSlug, visitorId, date },
+        }),
+      });
+
+      if (res.status === 201) {
+        console.log("[views] Новость прочитана:", newsSlug);
+      }
+    } catch (e) {
+      console.warn("[views] Ошибка записи прочтения:", e.message);
+    }
+  }
+
+  window.trackNewsRead = trackNewsRead;
   window.addEventListener("DOMContentLoaded", trackVisit);
 })();
