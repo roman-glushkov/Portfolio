@@ -322,62 +322,189 @@ function shuffle(array) {
 }
 
 function drawSingleElimination(teams) {
-    const canvas = getElement("bracketsCanvas");
-    if (!canvas) return;
+    const canvas = getElement('bracketsCanvas');
+    const scroll = getElement('bracketScroll') || canvas;
 
-    const shuffled = shuffle(teams);
-    const nextPowerOfTwo = 2 ** Math.ceil(Math.log2(shuffled.length));
+    if (!canvas || !scroll) return;
 
-    while (shuffled.length < nextPowerOfTwo) {
-        shuffled.push(null);
-    }
+    const participants = [...teams];
 
-    const rounds = [];
-    let currentMatches = [];
-
-    for (let i = 0; i < shuffled.length; i += 2) {
-        currentMatches.push([shuffled[i], shuffled[i + 1]]);
-    }
-
-    rounds.push(currentMatches);
-    let matchesCount = nextPowerOfTwo / 4;
-
-    while (matchesCount >= 1) {
-        const nextRound = [];
-        for (let i = 0; i < matchesCount; i++) {
-            nextRound.push([null, null]);
-        }
-        rounds.push(nextRound);
-        matchesCount /= 2;
-    }
-
-    const roundNames = { 1: "Финал", 2: "Полуфинал", 3: "Четвертьфинал" };
-
-    const html = rounds.map((round, index) => {
-        const roundNumber = rounds.length - index;
-        const title = roundNames[roundNumber] || (index === 0 ? "Первый раунд" : `Раунд ${index + 1}`);
-
-        const matches = round.map((match) => `
-            <div class="bracket-match">
-              <div class="bracket-team ${match[0] ? "" : "bracket-team--empty"}">${match[0] ? escapeHtml(match[0]) : "Ожидает победителя"}</div>
-              <div class="bracket-team ${match[1] ? "" : "bracket-team--empty"}">${match[1] ? escapeHtml(match[1]) : "Ожидает победителя"}</div>
+    if (participants.length < 2) {
+        scroll.innerHTML = `
+            <div class="brackets-welcome">
+                <h3>Недостаточно команд</h3>
+                <p>Для создания турнирной сетки необходимо минимум 2 команды.</p>
             </div>
-          `).join("");
+        `;
+        return;
+    }
+
+    const shuffled = shuffle(participants);
+    const size = 2 ** Math.ceil(Math.log2(shuffled.length));
+
+    // Генерация правильного посева (чтобы сильные команды не встретились сразу)
+    const seedOrder = (count) => {
+        let seeds = [1, 2];
+        while (seeds.length < count) {
+            const nextCount = seeds.length * 2;
+            seeds = seeds.flatMap(seed => [seed, nextCount + 1 - seed]);
+        }
+        return seeds;
+    };
+
+    const positions = seedOrder(size);
+    const slots = Array(size).fill(null);
+
+    shuffled.forEach((team, index) => {
+        slots[positions.indexOf(index + 1)] = team;
+    });
+
+    let nextMatchId = 1;
+    let rounds = [];
+
+    // Слоты текущего раунда: { team: string, source: matchId, outcome: 'winner'|'loser' }
+    let currentSlots = slots.map(team => ({
+        team,
+        source: null,
+        outcome: 'winner'
+    }));
+
+    const totalRounds = Math.log2(size);
+
+    for (let roundIndex = 0; roundIndex < totalRounds; roundIndex++) {
+        const matches = [];
+        const nextSlots = [];
+
+        for (let i = 0; i < currentSlots.length; i += 2) {
+            const first = currentSlots[i];
+            const second = currentSlots[i + 1];
+
+            const hasBye = !first.team || !second.team;
+
+            // ГЛАВНОЕ ИЗМЕНЕНИЕ:
+            // Если это первый раунд и есть пустое место (BYE)
+            // мы НЕ создаем матч, а просто переносим команду в следующий раунд
+            if (roundIndex === 0 && hasBye) {
+                const advancingSlot = first.team ? first : second;
+
+                // Команда переходит дальше без матча
+                nextSlots.push({
+                    team: advancingSlot.team,
+                    source: null,
+                    outcome: 'winner'
+                });
+
+                continue; // Пропускаем создание матча
+            }
+
+            // Создаем реальный матч
+            const match = {
+                id: nextMatchId++,
+                team1: first.team || null,
+                team2: second.team || null,
+                source1: first.source,
+                source2: second.source,
+                roundIndex,
+                winner: null
+            };
+
+            matches.push(match);
+
+            // Победитель этого матча пойдет в следующий раунд
+            nextSlots.push({
+                team: null,
+                source: match.id,
+                outcome: 'winner'
+            });
+        }
+
+        rounds.push(matches);
+        currentSlots = nextSlots;
+    }
+
+    const roundNames = {
+        1: 'Финал',
+        2: 'Полуфинал',
+        4: 'Четвертьфинал',
+        8: '1/8 финала',
+        16: '1/16 финала',
+        32: '1/32 финала'
+    };
+
+    const getRoundName = count => roundNames[count] || `Раунд из ${count} матчей`;
+
+    const getSlotLabel = (team, source, outcome = 'winner') => {
+        if (team) return escapeHtml(String(team));
+        if (source) {
+            const prefix = outcome === 'loser' ? 'Проигравший' : 'Победитель';
+            return `${prefix} М${source}`;
+        }
+        return 'Ожидание участника';
+    };
+
+    const renderTeam = (team, source, outcome, extraClass = '') => {
+        const isKnown = Boolean(team);
+        const label = getSlotLabel(team, source, outcome);
 
         return `
-        <div class="bracket-round" data-round-title="${escapeHtml(title)}">
-          ${matches}
+            <div class="bracket-team ${isKnown ? 'is-known' : 'bracket-team--empty'} ${extraClass}">
+                <span class="bracket-team-name">${label}</span>
+            </div>
+        `;
+    };
+
+    const renderMatch = match => {
+        return `
+            <div class="bracket-match" data-match-id="${match.id}">
+                <div class="bracket-match-label">МАТЧ ${match.id}</div>
+                ${renderTeam(match.team1, match.source1)}
+                ${renderTeam(match.team2, match.source2)}
+            </div>
+        `;
+    };
+
+    // Рендерим раунды (если в раунде нет матчей, он не отрендерится)
+    const roundsHtml = rounds.map((matches, index) => {
+        if (matches.length === 0) return ''; // Пропускаем пустые раунды
+
+        const title = getRoundName(matches.length);
+
+        return `
+            <section class="bracket-round" data-round="${index}">
+                <h3 class="bracket-round-heading">${escapeHtml(title)}</h3>
+                <div class="bracket-round-matches">
+                    ${matches.map(renderMatch).join('')}
+                </div>
+            </section>
+        `;
+    }).join('');
+
+    // Матч за 3-е место (если есть полуфиналы)
+    const semiFinals = rounds.length >= 2
+        ? rounds[rounds.length - 2]
+        : [];
+
+    let thirdPlaceHtml = '';
+
+    if (shuffled.length >= 4 && semiFinals.length === 2) {
+        thirdPlaceHtml = `
+            <section class="bracket-third-place">
+                <h3 class="bracket-round-heading">Матч за 3-е место</h3>
+                <div class="bracket-match bracket-match--third">
+                    <div class="bracket-match-label">БРОНЗА</div>
+                    ${renderTeam(null, semiFinals[0].id, 'loser')}
+                    ${renderTeam(null, semiFinals[1].id, 'loser')}
+                </div>
+            </section>
+        `;
+    }
+
+    scroll.innerHTML = `
+        <div class="bracket-layout">
+            <div class="bracket-tree">
+                ${roundsHtml}
+            </div>
+            ${thirdPlaceHtml}
         </div>
-      `;
-    }).join("");
-
-    canvas.innerHTML = `<div class="bracket-tree">${html}</div>`;
-
-    canvas.querySelectorAll(".bracket-round").forEach((round) => {
-        const title = round.dataset.roundTitle;
-        const heading = document.createElement("div");
-        heading.className = "bracket-round-heading";
-        heading.textContent = title;
-        round.prepend(heading);
-    });
+    `;
 }

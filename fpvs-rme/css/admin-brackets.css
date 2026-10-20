@@ -534,3 +534,221 @@
         width: 180px;
     }
 }
+
+
+/* Выпадающие меню выбора турнира и типа сетки */
+.brackets-select-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.brackets-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    min-height: 54px;
+    padding: 0 48px 0 17px;
+    border: 1px solid #e3e8e5;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8faf9 100%);
+    color: #26352e;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.brackets-select:hover {
+    border-color: #f0a47f;
+    background: #fffaf7;
+}
+
+.brackets-select:focus {
+    border-color: #ed7438;
+    box-shadow: 0 0 0 4px rgb(237 116 56 / 13%);
+    background: #ffffff;
+}
+
+.brackets-select option {
+    padding: 12px;
+    background: #ffffff;
+    color: #26352e;
+    font-weight: 500;
+}
+
+.brackets-select option:checked {
+    background: #fff0e7;
+    color: #d85d25;
+    font-weight: 700;
+}
+
+.brackets-select-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid #ed7438;
+    border-bottom: 2px solid #ed7438;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.brackets-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.brackets-field label {
+    color: #34443b;
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: 0.2px;
+}
+
+.brackets-field label::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 13px;
+    margin-right: 8px;
+    border-radius: 4px;
+    background: #ed7438;
+    vertical-align: -2px;
+}
+
+@media (max-width: 600px) {
+    .brackets-select {
+        min-height: 50px;
+        font-size: 14px;
+        border-radius: 12px;
+    }
+}
+
+.bracket-match {
+    position: relative;
+}
+
+.bracket-match-label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: #ed7438;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+
+/* ================================================================
+ *  СЕТКА В ВИДЕ ТРЕУГОЛЬНИКА (ПИРАМИДЫ)
+ * ================================================================ */
+
+/* Общий контейнер для сетки */
+.bracket-tree {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 40px;
+    /* Отступ между раундами */
+    padding: 20px;
+}
+
+/* Каждый раунд — это колонка */
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* Распределяет матчи по вертикали */
+    width: 220px;
+    flex-shrink: 0;
+}
+
+/* Название раунда */
+.bracket-round-heading {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #89958f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    height: 20px;
+    /* Фиксированная высота, чтобы сетка не прыгала */
+}
+
+/* Контейнер для матчей внутри раунда */
+.bracket-round-matches {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    /* Занимает всё свободное место */
+    position: relative;
+}
+
+/* Карточка матча */
+.bracket-match {
+    position: relative;
+    background: #fff;
+    border: 1px solid #e0e7e1;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(30, 55, 40, 0.04);
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    /* Небольшой отступ, чтобы карточки не слипались */
+}
+
+/* Линии соединения (рисуем через псевдоэлементы) */
+/* Горизонтальная линия от матча к следующему раунду */
+.bracket-match::after {
+    content: "";
+    position: absolute;
+    right: -20px;
+    /* Длина линии до следующего раунда */
+    top: 50%;
+    width: 20px;
+    height: 1px;
+    background: #cbd7ce;
+    z-index: 1;
+}
+
+/* Вертикальная линия, соединяющая два матча в пару */
+.bracket-round-matches::before {
+    content: "";
+    position: absolute;
+    right: -20px;
+    top: 25%;
+    /* Примерная высота для соединения пар */
+    bottom: 25%;
+    width: 1px;
+    background: #cbd7ce;
+    z-index: 1;
+}
+
+/* Убираем вертикальную линию у последнего раунда (финала) */
+.bracket-round:last-child .bracket-round-matches::before {
+    display: none;
+}
+
+/* Убираем горизонтальную линию у последнего раунда (финала) */
+.bracket-round:last-child .bracket-match::after {
+    display: none;
+}
+
+/* Делаем так, чтобы линии соединяли именно пары */
+/* Для этого нужно, чтобы между парами матчей было расстояние */
+/* Это достигается через justify-content: space-around; на .bracket-round-matches */
