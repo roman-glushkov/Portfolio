@@ -28,7 +28,6 @@ import {
   isAllPhotosModalOpen,
 } from "./data/gallery.js";
 import { registerModal, modalOpened, modalClosed } from "./core/modals.js";
-import { openLightbox } from "./ui/lightbox.js";
 
 async function startSite() {
   await loadPartials();
@@ -42,16 +41,13 @@ async function startSite() {
   const sergeyImg = document.querySelector("[data-about-photo]");
   if (sergeyImg) {
     sergeyImg.addEventListener("click", () => {
-      openLightbox(
-        [
-          {
-            src: "images/sergey.jpg",
-            albumTitle: "Сергей Канашин",
-            date: "",
-          },
-        ],
-        0
-      );
+      // Импортируем openLightbox динамически, чтобы не плодить кучу импортов вверху
+      import("./ui/lightbox.js").then((m) => {
+        m.openLightbox(
+          [{ src: "images/sergey.jpg", albumTitle: "Сергей Канашин", date: "" }],
+          0
+        );
+      });
     });
   }
 
@@ -61,6 +57,7 @@ async function startSite() {
   registerModal("allEvents", closeAllEventsModal, isAllEventsModalOpen);
   registerModal("allPhotos", closeAllPhotosModal, isAllPhotosModalOpen);
   registerModal("post", closePostModal, isPostModalOpen);
+
   // Параллельно грузим данные — быстрее
   await Promise.all([
     loadTournaments(),
@@ -68,6 +65,7 @@ async function startSite() {
     loadNews(),
     loadGallery(),
   ]);
+
   loadStats();
 
   // Один обработчик Esc — закрывает верхнюю открытую модалку
