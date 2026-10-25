@@ -6,6 +6,7 @@ import { initLeadModal } from "./lead-modal.js";
 import { loadLeads } from "./leads.js";
 import { config, db, Query } from "./appwrite-client.js";
 import { initBrackets } from "./brackets.js"; // <--- ДОБАВЛЕНО
+import { initNews } from "./news.js";
 
 async function loadNewsStats() {
   const wrap = document.getElementById("newsStatsWrap");
@@ -47,8 +48,8 @@ async function loadNewsStats() {
       </tr></thead>
       <tbody>
         ${rows
-        .map(
-          (r) => `
+          .map(
+            (r) => `
           <tr>
             <td>${r.title}</td>
             <td style="text-align: center; font-weight: 700; font-size: 16px; color: #2d7764;">
@@ -56,8 +57,8 @@ async function loadNewsStats() {
             </td>
           </tr>
         `
-        )
-        .join("")}
+          )
+          .join("")}
       </tbody>
     </table>`;
   } catch (e) {
@@ -71,7 +72,8 @@ await loadPartials();
 initStatsControls();
 initStatsSlider();
 initLeadModal();
-initBrackets(); // <--- ДОБАВЛЕНО (запускает логику сеток)
+initBrackets();
+initNews(); // <--- ДОБАВЛЕНО (запускает логику сеток)
 
 initAuth(() => {
   loadStats();
