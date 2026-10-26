@@ -109,3 +109,35 @@
   margin-top: 4px;
 }
 
+/* ---------- Кнопка "Все новости" ---------- */
+.news-footer {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 0;
+}
+
+.news-footer[hidden] {
+  display: none;
+}
+
+.show-all-news {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px dashed #df6a30;
+  background: #fff8f2;
+  color: #df6a30;
+  border-radius: 12px;
+  padding: 14px 22px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.show-all-news:hover {
+  background: #fff1e6;
+  border-color: #d86326;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(223, 106, 48, 0.18);
+}

@@ -14,8 +14,7 @@ export async function loadNews() {
   const grid = document.getElementById("newsGrid");
   if (!grid) return;
 
-  // Берем только 3 последние новости
-  const items = await appwriteList("news", { orderDesc: "date", limit: 3 });
+  const items = await appwriteList("news", { limit: 100 });
 
   if (!items.length) {
     grid.innerHTML = `<p style="color:#888">Пока нет новостей.</p>`;
@@ -23,24 +22,26 @@ export async function loadNews() {
     return;
   }
 
-  // Формируем ссылки на фото из Appwrite Storage
+  // Сортируем по дате (свежие сверху)
+  items.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+
+  // Формируем ссылки на фото для ВСЕХ новостей
   const enriched = items.map((item) => {
-    // Если в базе есть массив gallery (ID файлов), собираем ссылки
     let photos = [];
     if (item.gallery && item.gallery.length > 0) {
       photos = item.gallery.map((fileId) => getNewsImageUrl(fileId));
-    } else if (item.imageId) {
-      // На всякий случай поддержка старого поля imageId (одно фото)
-      photos = [getNewsImageUrl(item.imageId)];
     }
     return { ...item, gallery: photos };
   });
 
+  // Сохраняем ВСЕ новости (для модалки)
   setNews(enriched);
-  const news = getNews();
+  const allNews = getNews();
 
-  const featured = news[0];
-  const rest = news.slice(1, 3);
+  // Берем только 3 для главной
+  const preview = allNews.slice(0, 3);
+  const featured = preview[0];
+  const rest = preview.slice(1, 3);
 
   grid.innerHTML = `
     ${renderNewsCard(featured, true)}
@@ -50,6 +51,21 @@ export async function loadNews() {
   `;
 
   bindNewsClicks(grid);
+
+  // Кнопка "Все новости"
+  const footer = document.getElementById("newsFooter");
+  if (footer) {
+    if (allNews.length > 3) {
+      footer.hidden = false;
+      const btn = footer.querySelector("[data-show-all-news]");
+      if (btn && !btn.dataset.bound) {
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", openAllNewsModal);
+      }
+    } else {
+      footer.hidden = true;
+    }
+  }
 }
 
 function getNewsImageUrl(fileId) {
@@ -179,4 +195,63 @@ function bindNewsClicks(root) {
       openNewsPost(el.dataset.newsOpen);
     });
   });
+}
+
+/* ---------- Модалка "Все новости" ---------- */
+
+function openAllNewsModal() {
+  const modal = document.getElementById("allNewsModal");
+  if (!modal) return;
+
+  const allNews = getNews(); // Берем все новости из store
+  const list = document.getElementById("allNewsList");
+
+  if (!allNews.length) {
+    list.innerHTML = '<p style="color:#888; padding: 20px;">Нет новостей</p>';
+  } else {
+    list.innerHTML = allNews
+      .map(
+        (n) => `
+      <div class="news-row" data-news-slug="${n.slug}">
+        <div class="news-row__date">
+          <span>${formatNewsDate(n)}</span>
+          ${n.tag ? `<span>· ${n.tag}</span>` : ""}
+        </div>
+        <div class="news-row__title">${n.title}</div>
+        ${n.excerpt ? `<div class="news-row__excerpt">${n.excerpt}</div>` : ""}
+      </div>
+    `
+      )
+      .join("");
+
+    // Клик по строке → открываем пост (закрываем модалку)
+    list.querySelectorAll(".news-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        closeAllNewsModal();
+        setTimeout(() => openNewsPost(row.dataset.newsSlug), 150);
+      });
+    });
+  }
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+
+  modal.querySelectorAll("[data-all-news-close]").forEach((el) => {
+    el.onclick = closeAllNewsModal;
+  });
+}
+
+export function closeAllNewsModal() {
+  const modal = document.getElementById("allNewsModal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+export function isAllNewsOpen() {
+  return (
+    document.getElementById("allNewsModal")?.classList.contains("open") || false
+  );
 }

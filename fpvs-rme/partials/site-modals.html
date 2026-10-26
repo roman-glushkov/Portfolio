@@ -44,7 +44,13 @@
 <div class="all-tournaments-modal" id="allTournamentsModal" aria-hidden="true">
   <div class="all-tournaments-modal__backdrop" data-all-close></div>
   <article class="all-tournaments-modal__card">
-    <button class="all-tournaments-modal__close" data-all-close aria-label="Закрыть">✕</button>
+    <button
+      class="all-tournaments-modal__close"
+      data-all-close
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
     <header class="all-tournaments-modal__head">
       <small>ВСЕ СОРЕВНОВАНИЯ</small>
       <h2>Турниры федерации</h2>
@@ -57,11 +63,20 @@
 <div class="all-events-modal" id="allEventsModal" aria-hidden="true">
   <div class="all-events-modal__backdrop" data-all-events-close></div>
   <article class="all-events-modal__card">
-    <button class="all-events-modal__close" data-all-events-close aria-label="Закрыть">✕</button>
+    <button
+      class="all-events-modal__close"
+      data-all-events-close
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
     <header class="all-events-modal__head">
       <small>ПОЛНЫЙ КАЛЕНДАРЬ</small>
       <h2>Все события</h2>
-      <div class="calendar-filters calendar-filters--modal" id="calendarFiltersModal">
+      <div
+        class="calendar-filters calendar-filters--modal"
+        id="calendarFiltersModal"
+      >
         <button class="cal-filter active" data-sport="">Все</button>
         <button class="cal-filter" data-sport="football">⚽ Футбол</button>
         <button class="cal-filter" data-sport="volleyball">🏐 Волейбол</button>
@@ -75,11 +90,38 @@
 <div class="all-photos-modal" id="allPhotosModal" aria-hidden="true">
   <div class="all-photos-modal__backdrop" data-all-photos-close></div>
   <article class="all-photos-modal__card">
-    <button class="all-photos-modal__close" data-all-photos-close aria-label="Закрыть">✕</button>
+    <button
+      class="all-photos-modal__close"
+      data-all-photos-close
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
     <header class="all-photos-modal__head">
       <small>ПОЛНАЯ ЛЕНТА</small>
       <h2>Все фотографии</h2>
     </header>
     <div class="all-photos-modal__list" id="allPhotosList"></div>
+  </article>
+</div>
+
+<!-- ========== МОДАЛКА "ВСЕ НОВОСТИ" ========== -->
+<div class="all-news-modal" id="allNewsModal" aria-hidden="true">
+  <div class="all-news-modal__backdrop" data-all-news-close></div>
+  <article class="all-news-modal__card">
+    <button
+      class="all-news-modal__close"
+      data-all-news-close
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
+    <header class="all-news-modal__head">
+      <small>ПОЛНЫЙ АРХИВ</small>
+      <h2>Все новости</h2>
+    </header>
+    <div class="all-news-modal__list" id="allNewsList">
+      <div class="loading">Загрузка...</div>
+    </div>
   </article>
 </div>
