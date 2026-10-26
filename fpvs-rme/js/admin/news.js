@@ -75,6 +75,9 @@ function openEditor(id) {
     el.classList.toggle("active", el.dataset.newsId === id);
   });
 
+  // Состояние: какие фото удалены
+  let deletedGalleryIds = [];
+
   editor.innerHTML = `
         <form class="news-form" id="newsForm">
             <h2>${news ? "Редактировать новость" : "Новая новость"}</h2>
@@ -115,15 +118,35 @@ function openEditor(id) {
             </div>
 
             <div>
-                <label>Фото (необязательно)</label>
-                <input type="file" id="nfImage" accept="image/*" />
-                ${
-                  news && news.imageId
-                    ? `<img class="news-image-preview" src="${getFileUrl(
-                        news.imageId
-                      )}" />`
-                    : ""
-                }
+                <label>Фотографии (можно несколько)</label>
+                <div class="file-upload-wrapper" id="fileUploadWrapper">
+                    <input type="file" id="nfImages" accept="image/*" class="file-input" multiple />
+                    <div class="file-upload-content">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span id="fileUploadText">Нажмите, чтобы загрузить фото (можно несколько)</span>
+                    </div>
+                </div>
+                <div id="imagePreviewContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                    ${
+                      news && news.gallery
+                        ? news.gallery
+                            .map(
+                              (fileId, index) =>
+                                `<div class="preview-item" data-id="${fileId}" style="position: relative;">
+                                  <img class="news-image-preview" src="${getFileUrl(
+                                    fileId
+                                  )}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;" />
+                                  <button type="button" class="remove-photo-btn" data-id="${fileId}" style="position: absolute; top: -5px; right: -5px; background: #d84343; color: #fff; border: 0; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: grid; place-items: center;">✕</button>
+                                </div>`
+                            )
+                            .join("")
+                        : ""
+                    }
+                </div>
             </div>
 
             <div class="news-form-actions">
@@ -137,16 +160,66 @@ function openEditor(id) {
         </form>
     `;
 
-  getElement("newsForm").addEventListener("submit", (e) => saveNews(e, news));
+  // Обработчик удаления фото
+  editor.querySelectorAll(".remove-photo-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const fileId = btn.dataset.id;
+      deletedGalleryIds.push(fileId); // Запоминаем, что это фото нужно удалить
+
+      // Удаляем превью из DOM
+      const previewItem = btn.closest(".preview-item");
+      if (previewItem) previewItem.remove();
+    });
+  });
+
+  getElement("newsForm").addEventListener("submit", (e) =>
+    saveNews(e, news, deletedGalleryIds)
+  );
 
   if (news) {
     getElement("deleteNewsBtn").addEventListener("click", () =>
       deleteNews(news)
     );
   }
+
+  // Обработка выбора новых файлов (как было)
+  const fileInput = getElement("nfImages");
+  const uploadWrapper = getElement("fileUploadWrapper");
+  const uploadText = getElement("fileUploadText");
+  const previewContainer = getElement("imagePreviewContainer");
+
+  if (fileInput) {
+    fileInput.addEventListener("change", (e) => {
+      const files = e.target.files;
+      if (files.length > 0) {
+        uploadText.textContent = `Выбрано файлов: ${files.length}`;
+        uploadWrapper.classList.add("has-file");
+
+        Array.from(files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const div = document.createElement("div");
+            div.className = "preview-item";
+            div.style.position = "relative";
+            div.innerHTML = `
+              <img class="news-image-preview" src="${ev.target.result}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;" />
+            `;
+            previewContainer.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
+      } else {
+        uploadText.textContent =
+          "Нажмите, чтобы загрузить фото (можно несколько)";
+        uploadWrapper.classList.remove("has-file");
+        // Не очищаем старые превью, если это редактирование
+      }
+    });
+  }
 }
 
-async function saveNews(e, existingNews) {
+async function saveNews(e, existingNews, deletedGalleryIds = []) {
   e.preventDefault();
   const btn = getElement("saveNewsBtn");
   btn.disabled = true;
@@ -157,24 +230,35 @@ async function saveNews(e, existingNews) {
   const date = getElement("nfDate").value;
   const excerpt = getElement("nfExcerpt").value.trim();
   const body = getElement("nfBody").value.trim();
-  const fileInput = getElement("nfImage");
-  const file = fileInput.files[0];
+  const fileInput = getElement("nfImages");
+  const files = fileInput.files;
 
   try {
-    let imageId = existingNews ? existingNews.imageId : null;
+    let gallery =
+      existingNews && existingNews.gallery ? existingNews.gallery : [];
 
-    // Если выбрано новое фото — сжимаем и загружаем
-    if (file) {
-      const compressed = await compressImage(file, 1200, 0.8);
-      const uploaded = await storage.createFile(
-        "news-images",
-        ID.unique(),
-        compressed
-      );
-      imageId = uploaded.$id;
+    // 1. Удаляем фото из Storage, если были нажаты крестики
+    if (deletedGalleryIds.length > 0) {
+      for (const fileId of deletedGalleryIds) {
+        await storage.deleteFile("news-images", fileId).catch(() => {});
+      }
+      // Убираем удаленные ID из массива gallery
+      gallery = gallery.filter((id) => !deletedGalleryIds.includes(id));
     }
 
-    // Генерируем slug из заголовка (латиница)
+    // 2. Загружаем новые фото, если выбраны
+    if (files.length > 0) {
+      for (const file of files) {
+        const compressed = await compressImage(file, 1200, 0.8);
+        const uploaded = await storage.createFile(
+          "news-images",
+          ID.unique(),
+          compressed
+        );
+        gallery.push(uploaded.$id);
+      }
+    }
+
     let slug = existingNews
       ? existingNews.slug
       : transliterate(title)
@@ -188,7 +272,7 @@ async function saveNews(e, existingNews) {
       date,
       excerpt,
       body,
-      imageId,
+      gallery,
       slug,
     };
 
@@ -204,7 +288,7 @@ async function saveNews(e, existingNews) {
     }
 
     await loadNewsList();
-    openEditor(null); // Сброс формы
+    openEditor(null);
     alert("Сохранено!");
   } catch (err) {
     console.error(err);

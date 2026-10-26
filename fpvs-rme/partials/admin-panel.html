@@ -37,6 +37,15 @@
         <div class="user" id="userInfo"></div>
       </div>
       <div style="display: flex; gap: 10px">
+        <!-- НОВАЯ КНОПКА ДЛЯ НОВОСТЕЙ -->
+        <button
+          class="logout"
+          id="openNewsBtn"
+          style="background: #2d7764; color: #fff; border-color: #2d7764"
+        >
+          Новости
+        </button>
+
         <button
           class="logout"
           id="openBracketsBtn"
@@ -275,7 +284,6 @@
     <button class="news-modal__close" type="button" data-news-close>✕</button>
 
     <div class="news-layout">
-      <!-- Левая колонка: список новостей -->
       <aside class="news-sidebar">
         <div class="news-sidebar__header">
           <h2>Управление новостями</h2>
@@ -286,7 +294,6 @@
         </div>
       </aside>
 
-      <!-- Правая колонка: форма редактирования -->
       <main class="news-editor" id="newsEditor">
         <div class="news-welcome">
           <h3>Выберите новость</h3>

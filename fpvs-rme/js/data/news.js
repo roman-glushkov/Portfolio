@@ -14,7 +14,7 @@ export async function loadNews() {
   const grid = document.getElementById("newsGrid");
   if (!grid) return;
 
-  // Берем только 3 последние новости (как ты и просил)
+  // Берем только 3 последние новости
   const items = await appwriteList("news", { orderDesc: "date", limit: 3 });
 
   if (!items.length) {
@@ -25,14 +25,20 @@ export async function loadNews() {
 
   // Формируем ссылки на фото из Appwrite Storage
   const enriched = items.map((item) => {
-    const gallery = item.imageId ? [getNewsImageUrl(item.imageId)] : [];
-    return { ...item, gallery };
+    // Если в базе есть массив gallery (ID файлов), собираем ссылки
+    let photos = [];
+    if (item.gallery && item.gallery.length > 0) {
+      photos = item.gallery.map((fileId) => getNewsImageUrl(fileId));
+    } else if (item.imageId) {
+      // На всякий случай поддержка старого поля imageId (одно фото)
+      photos = [getNewsImageUrl(item.imageId)];
+    }
+    return { ...item, gallery: photos };
   });
 
   setNews(enriched);
   const news = getNews();
 
-  // Первая (самая свежая) — большая, остальные две — маленькие
   const featured = news[0];
   const rest = news.slice(1, 3);
 
@@ -46,22 +52,22 @@ export async function loadNews() {
   bindNewsClicks(grid);
 }
 
-/**
- * Возвращает прямую ссылку на файл из Appwrite Storage
- */
 function getNewsImageUrl(fileId) {
   const config = window.APPWRITE_CONFIG;
   if (!config) return "";
-  return `${config.endpoint}/storage/buckets/news-images/files/${fileId}/view?project=${config.projectId}`;
+  // Используем /download вместо /view
+  return `${config.endpoint}/storage/buckets/news-images/files/${fileId}/download?project=${config.projectId}`;
 }
 
 function renderNewsCard(n, isFeatured) {
+  // Берем все фото из массива gallery (если он есть)
   const photos = Array.isArray(n.gallery) ? n.gallery.filter(Boolean) : [];
 
   if (isFeatured) {
+    // Если фото есть, рисуем коллаж. Если нет — пусто.
     const collage = photos.length
-      ? `<div class="news-collage news-collage--1">
-           <img src="${photos[0]}" alt="" loading="lazy" class="photo-zoomable" data-news-photo="${n.slug}" data-photo-index="0">
+      ? `<div class="news-collage news-collage--${Math.min(photos.length, 5)}">
+           ${renderCollage(photos, n.slug)}
          </div>`
       : "";
     return `
@@ -95,6 +101,43 @@ function renderNewsCard(n, isFeatured) {
       </div>
     </article>
   `;
+}
+
+// Функция для сборки коллажа (такая же, как была раньше)
+function renderCollage(photos, newsSlug) {
+  const MAX = 4;
+  const visible = photos.slice(0, MAX);
+  const hidden = photos.length - visible.length;
+
+  const img = (src, i, cls = "") =>
+    `<img src="${src}" alt="" loading="lazy" class="${cls} photo-zoomable"
+          data-photo-index="${i}" data-news-photo="${newsSlug}">`;
+
+  if (visible.length === 1) return img(visible[0], 0);
+  if (visible.length === 2)
+    return visible.map((src, i) => img(src, i)).join("");
+  if (visible.length === 3) {
+    return `
+      ${img(visible[0], 0, "collage-big")}
+      <div class="collage-col">
+        ${img(visible[1], 1)}
+        ${img(visible[2], 2)}
+      </div>
+    `;
+  }
+
+  return visible
+    .slice(0, 4)
+    .map((src, i) => {
+      const isLast = i === 3 && hidden > 0;
+      return `
+      <div class="collage-cell">
+        ${img(src, i)}
+        ${isLast ? `<span class="collage-more">+${hidden}</span>` : ""}
+      </div>
+    `;
+    })
+    .join("");
 }
 
 function bindNewsClicks(root) {
