@@ -27,7 +27,7 @@ import {
   closeAllPhotosModal,
   isAllPhotosModalOpen,
 } from "./data/gallery.js";
-import { registerModal, modalOpened, modalClosed } from "./core/modals.js";
+import { registerModal } from "./core/modals.js";
 
 async function startSite() {
   await loadPartials();
@@ -79,7 +79,7 @@ async function startSite() {
     if (isAllTournamentsOpen()) return closeAllTournaments();
     if (isAllEventsModalOpen()) return closeAllEventsModal();
     if (isAllPhotosModalOpen()) return closeAllPhotosModal();
-    if (isAllNewsOpen()) return closeAllNewsModal(); // <--- ВОТ ЭТА СТРОКА
+    if (isAllNewsOpen()) return closeAllNewsModal();
     if (isPostModalOpen()) closePostModal();
   });
 }
@@ -88,12 +88,25 @@ startSite().catch((error) => {
   console.error("Не удалось инициализировать сайт ФПВС РМЭ:", error);
 });
 
-// Регистрация Service Worker для PWA
+// Регистрация Service Worker для PWA (только публичный сайт)
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("service-worker.js")
+      .register("service-worker.js", { scope: "./index.html" })
       .then((reg) => console.log("SW зарегистрирован:", reg.scope))
-      .catch((err) => console.warn("SW не зарегистрирован:", err));
+      .catch((err) => {
+        console.warn(
+          "SW scope ./index.html не принят, регистрируем без scope:",
+          err
+        );
+        // Fallback: если Chrome не принимает scope как файл — регистрируем без scope.
+        // Перехват админки всё равно заблокирован фильтром в service-worker.js
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .then((reg) =>
+            console.log("SW зарегистрирован (fallback):", reg.scope)
+          )
+          .catch((e) => console.warn("SW не зарегистрирован:", e));
+      });
   });
 }
