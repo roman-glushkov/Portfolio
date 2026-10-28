@@ -260,6 +260,31 @@
               <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </button>
+
+          <!-- НОВАЯ КНОПКА СКАЧИВАНИЯ -->
+          <button
+            id="downloadBracketBtn"
+            class="btn-generate"
+            type="button"
+            style="background: #2d7764; margin-top: 10px; display: none"
+          >
+            <span>Скачать сетку (PNG)</span>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </button>
+
           <p class="brackets-footer-hint" id="bracketGenerateHint">
             Выберите турнир, чтобы начать
           </p>
@@ -340,6 +365,67 @@
           <p>Или нажмите «+ Добавить», чтобы создать новый.</p>
         </div>
       </main>
+    </div>
+  </div>
+</div>
+
+<!-- ========== МОДАЛКА ВСЕХ ЗАЯВОК ========== -->
+<div class="all-leads-modal" id="allLeadsModal">
+  <div class="all-leads-modal__backdrop" data-all-close></div>
+  <div class="all-leads-modal__card">
+    <div class="all-leads-modal__head">
+      <h2>Все заявки</h2>
+      <button
+        class="all-leads-modal__close"
+        data-all-close
+        aria-label="Закрыть"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="all-leads-filters">
+      <input
+        type="search"
+        id="filterSearch"
+        placeholder="Поиск по имени, телефону, команде…"
+      />
+      <select id="filterTopic">
+        <option value="">Все темы</option>
+        <option value="Хочу принять участие">Хочу принять участие</option>
+        <option value="Хочу узнать о турнире">Хочу узнать о турнире</option>
+        <option value="Хочу стать партнёром">Хочу стать партнёром</option>
+        <option value="Другой вопрос">Другой вопрос</option>
+      </select>
+      <select id="filterTournament">
+        <option value="">Все турниры</option>
+      </select>
+      <select id="filterStatus">
+        <option value="">Все статусы</option>
+        <option value="new">Только новые</option>
+        <option value="processed">Только обработанные</option>
+      </select>
+      <button id="filterReset" class="filter-reset">Сбросить</button>
+    </div>
+
+    <div class="all-leads-count" id="allLeadsCount">Найдено: 0</div>
+
+    <div class="all-leads-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Тема</th>
+            <th>Турнир</th>
+            <th>Команда</th>
+            <th>Статус</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="allLeadsBody"></tbody>
+      </table>
     </div>
   </div>
 </div>

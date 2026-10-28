@@ -3,7 +3,7 @@ import { loadPartials } from "../core/partials.js";
 import { initAuth } from "./auth.js";
 import { initStatsControls, initStatsSlider, loadStats } from "./stats.js";
 import { initLeadModal } from "./lead-modal.js";
-import { loadLeads } from "./leads.js";
+import { loadLeads, initAllLeadsModal } from "./leads.js";
 import { config, db, Query } from "./appwrite-client.js";
 import { initBrackets } from "./brackets.js";
 import { initNews, closeNewsModal, isNewsOpen } from "./news.js";
@@ -81,6 +81,7 @@ initLeadModal();
 initBrackets();
 initNews();
 initTournaments();
+initAllLeadsModal();
 
 // Регистрируем модалки для Esc и кнопки "Назад"
 registerModal("news", closeNewsModal, isNewsOpen);
