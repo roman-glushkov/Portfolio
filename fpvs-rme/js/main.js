@@ -12,7 +12,7 @@ import {
   closeAllEventsModal,
   isAllEventsModalOpen,
 } from "./data/calendar.js";
-import { loadNews } from "./data/news.js";
+import { loadNews, closeAllNewsModal, isAllNewsOpen } from "./data/news.js";
 import { closePostModal, isPostModalOpen } from "./modals/post-modal.js";
 import {
   closeTournamentModal,
@@ -37,14 +37,18 @@ async function startSite() {
   initSmoothScroll();
   initLightbox();
 
-  // Клик по фото Сергея Канашина → лайтбокс
   const sergeyImg = document.querySelector("[data-about-photo]");
   if (sergeyImg) {
     sergeyImg.addEventListener("click", () => {
-      // Импортируем openLightbox динамически, чтобы не плодить кучу импортов вверху
       import("./ui/lightbox.js").then((m) => {
         m.openLightbox(
-          [{ src: "images/sergey.jpg", albumTitle: "Сергей Канашин", date: "" }],
+          [
+            {
+              src: "images/sergey.jpg",
+              albumTitle: "Сергей Канашин",
+              date: "",
+            },
+          ],
           0
         );
       });
@@ -57,8 +61,8 @@ async function startSite() {
   registerModal("allEvents", closeAllEventsModal, isAllEventsModalOpen);
   registerModal("allPhotos", closeAllPhotosModal, isAllPhotosModalOpen);
   registerModal("post", closePostModal, isPostModalOpen);
+  registerModal("allNews", closeAllNewsModal, isAllNewsOpen);
 
-  // Параллельно грузим данные — быстрее
   await Promise.all([
     loadTournaments(),
     loadCalendar(),
@@ -68,7 +72,6 @@ async function startSite() {
 
   loadStats();
 
-  // Один обработчик Esc — закрывает верхнюю открытую модалку
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     if (isLightboxOpen()) return closeLightbox();
@@ -76,6 +79,7 @@ async function startSite() {
     if (isAllTournamentsOpen()) return closeAllTournaments();
     if (isAllEventsModalOpen()) return closeAllEventsModal();
     if (isAllPhotosModalOpen()) return closeAllPhotosModal();
+    if (isAllNewsOpen()) return closeAllNewsModal(); // <--- ВОТ ЭТА СТРОКА
     if (isPostModalOpen()) closePostModal();
   });
 }

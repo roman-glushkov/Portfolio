@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T20:13:21.940Z",
+  "generatedAt": "2026-10-28T10:00:40.006Z",
   "root": "images",
   "tree": {
     "files": [
@@ -8,34 +8,6 @@
       "sergey.jpg"
     ],
     "dirs": {
-      "news": {
-        "files": [],
-        "dirs": {
-          "festival-yunosheskih": {
-            "files": [
-              "1.jpg"
-            ],
-            "dirs": {}
-          },
-          "grant": {
-            "files": [
-              "1.jpg",
-              "2.jpg",
-              "3.jpg",
-              "4.jpg",
-              "5.jpg",
-              "6.jpg"
-            ],
-            "dirs": {}
-          },
-          "kubok-sodruzhestva": {
-            "files": [
-              "1.jpg"
-            ],
-            "dirs": {}
-          }
-        }
-      },
       "tournaments": {
         "files": [],
         "dirs": {

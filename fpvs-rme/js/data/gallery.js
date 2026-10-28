@@ -4,6 +4,7 @@
 
 import { appwriteList } from "../core/appwrite.js";
 import { modalOpened, modalClosed } from "../core/modals.js";
+import { openLightbox } from "../ui/lightbox.js"; // <--- Добавлен импорт
 
 const PREVIEW_COUNT = 3;
 
@@ -48,7 +49,7 @@ export async function loadGallery() {
   grid.querySelectorAll("figure").forEach((fig) => {
     fig.onclick = () => {
       const idx = parseInt(fig.dataset.photoIndex, 10) || 0;
-      import("../ui/lightbox.js").then((m) => m.openLightbox(previewLb, idx));
+      openLightbox(previewLb, idx); // Теперь используем импортированную функцию
     };
   });
 
@@ -71,8 +72,10 @@ export async function loadGallery() {
 function buildPhotoList(tournaments, news) {
   const list = [];
 
+  // 1. Закреплённые
   PINNED.forEach((p) => list.push(p));
 
+  // 2. Турниры — из манифеста (папки)
   tournaments.forEach((t) => {
     const files = getFilesFromManifest(["tournaments", t.slug]);
     if (!files.length) return;
@@ -92,13 +95,13 @@ function buildPhotoList(tournaments, news) {
     });
   });
 
+  // 3. Новости — из Appwrite Storage (массив gallery с ID файлов)
   news.forEach((n) => {
-    const files = getFilesFromManifest(["news", n.slug]);
-    if (!files.length) return;
+    if (!n.gallery || !n.gallery.length) return;
 
-    files.forEach((file) => {
+    n.gallery.forEach((fileId) => {
       list.push({
-        src: `images/news/${n.slug}/${file}`,
+        src: getNewsImageUrl(fileId),
         albumTitle: n.title || "Новость",
         date: n.date || "",
         sortKey: n.date || "",
@@ -106,6 +109,7 @@ function buildPhotoList(tournaments, news) {
     });
   });
 
+  // Сортировка
   const pinned = list.filter((p) => p.sortKey === "");
   const rest = list.filter((p) => p.sortKey !== "");
 
@@ -114,6 +118,12 @@ function buildPhotoList(tournaments, news) {
   );
 
   return [...pinned, ...rest];
+}
+
+function getNewsImageUrl(fileId) {
+  const config = window.APPWRITE_CONFIG;
+  if (!config) return "";
+  return `${config.endpoint}/storage/buckets/news-images/files/${fileId}/download?project=${config.projectId}`;
 }
 
 function getFilesFromManifest(parts) {
@@ -170,7 +180,7 @@ function openAllPhotosModal() {
     fig.style.cursor = "zoom-in";
     fig.onclick = () => {
       const idx = parseInt(fig.dataset.photoIndex, 10) || 0;
-      import("../ui/lightbox.js").then((m) => m.openLightbox(lbPhotos, idx));
+      openLightbox(lbPhotos, idx);
     };
   });
 
@@ -252,15 +262,4 @@ function escapeHtml(value) {
 
 function escapeAttr(value) {
   return escapeHtml(value);
-}
-
-// Обработчик для фото Сергея Канашина
-const sergeyImg = document.querySelector("[data-about-photo]");
-if (sergeyImg) {
-  sergeyImg.addEventListener("click", () => {
-    openLightbox(
-      [{ src: "images/sergey.jpg", albumTitle: "Сергей Канашин", date: "" }],
-      0
-    );
-  });
 }

@@ -75,3 +75,10 @@
   letter-spacing: 0.5px;
 }
 
+.lightbox {
+  touch-action: pan-y; /* разрешаем вертикальный скролл, но отключаем стандартный горизонтальный */
+}
+
+.lb-img {
+  will-change: transform; /* для плавности анимации */
+}

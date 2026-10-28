@@ -9,6 +9,7 @@ import { formatNewsDate } from "../core/dates.js";
 import { setNews, getNews } from "./news-store.js";
 import { openNewsPost } from "../modals/post-modal.js";
 import { openLightbox } from "../ui/lightbox.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 export async function loadNews() {
   const grid = document.getElementById("newsGrid");
@@ -71,16 +72,13 @@ export async function loadNews() {
 function getNewsImageUrl(fileId) {
   const config = window.APPWRITE_CONFIG;
   if (!config) return "";
-  // Используем /download вместо /view
   return `${config.endpoint}/storage/buckets/news-images/files/${fileId}/download?project=${config.projectId}`;
 }
 
 function renderNewsCard(n, isFeatured) {
-  // Берем все фото из массива gallery (если он есть)
   const photos = Array.isArray(n.gallery) ? n.gallery.filter(Boolean) : [];
 
   if (isFeatured) {
-    // Если фото есть, рисуем коллаж. Если нет — пусто.
     const collage = photos.length
       ? `<div class="news-collage news-collage--${Math.min(photos.length, 5)}">
            ${renderCollage(photos, n.slug)}
@@ -119,7 +117,6 @@ function renderNewsCard(n, isFeatured) {
   `;
 }
 
-// Функция для сборки коллажа (такая же, как была раньше)
 function renderCollage(photos, newsSlug) {
   const MAX = 4;
   const visible = photos.slice(0, MAX);
@@ -157,7 +154,6 @@ function renderCollage(photos, newsSlug) {
 }
 
 function bindNewsClicks(root) {
-  // 1. Клик по фото → лайтбокс
   root.querySelectorAll("img[data-news-photo]").forEach((img) => {
     img.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -178,7 +174,6 @@ function bindNewsClicks(root) {
     });
   });
 
-  // 2. Клик по тексту → модалка новости
   root.querySelectorAll("[data-news-text]").forEach((el) => {
     el.addEventListener("click", (e) => {
       if (e.target.closest("a")) return;
@@ -187,7 +182,6 @@ function bindNewsClicks(root) {
     });
   });
 
-  // 3. Клик по ссылке "Подробнее"
   root.querySelectorAll("[data-news-open]").forEach((el) => {
     el.addEventListener("click", (e) => {
       e.preventDefault();
@@ -203,7 +197,7 @@ function openAllNewsModal() {
   const modal = document.getElementById("allNewsModal");
   if (!modal) return;
 
-  const allNews = getNews(); // Берем все новости из store
+  const allNews = getNews();
   const list = document.getElementById("allNewsList");
 
   if (!allNews.length) {
@@ -224,7 +218,6 @@ function openAllNewsModal() {
       )
       .join("");
 
-    // Клик по строке → открываем пост (закрываем модалку)
     list.querySelectorAll(".news-row").forEach((row) => {
       row.addEventListener("click", () => {
         closeAllNewsModal();
@@ -236,6 +229,7 @@ function openAllNewsModal() {
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  modalOpened("allNews"); // <--- ДОБАВЛЕНО
 
   modal.querySelectorAll("[data-all-news-close]").forEach((el) => {
     el.onclick = closeAllNewsModal;
@@ -244,10 +238,11 @@ function openAllNewsModal() {
 
 export function closeAllNewsModal() {
   const modal = document.getElementById("allNewsModal");
-  if (!modal) return;
+  if (!modal || !modal.classList.contains("open")) return;
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  modalClosed("allNews"); // <--- ДОБАВЛЕНО
 }
 
 export function isAllNewsOpen() {

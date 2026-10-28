@@ -280,3 +280,82 @@
   display: flex;
   justify-content: center;
 }
+
+/* ---------- Мобильная адаптация редактора новостей ---------- */
+@media (max-width: 760px) {
+  .news-modal {
+    padding: 8px;
+  }
+
+  .news-modal__card {
+    height: 94vh;
+    min-height: 0;
+    border-radius: 15px;
+  }
+
+  .news-layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .news-sidebar {
+    width: 100%;
+    max-height: 200px; /* Список не на весь экран */
+    flex: 0 0 auto;
+    border-right: 0;
+    border-bottom: 1px solid #e6ebe8;
+    padding: 16px;
+  }
+
+  .news-sidebar__header {
+    padding-right: 40px;
+    margin-bottom: 12px;
+  }
+
+  .news-sidebar__header h2 {
+    font-size: 16px;
+  }
+
+  .btn-add-news {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .news-editor {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .news-welcome {
+    margin-top: 20px;
+    padding: 24px;
+  }
+
+  .news-form {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .news-form h2 {
+    font-size: 18px;
+  }
+
+  .news-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-save,
+  .btn-delete {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .btn-delete {
+    margin-right: 0;
+  }
+
+  .news-image-preview {
+    max-height: 120px;
+  }
+}
