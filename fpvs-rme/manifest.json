@@ -2,7 +2,8 @@
   "name": "ФПВС РМЭ — Спорт на пляже",
   "short_name": "ФПВС РМЭ",
   "description": "Федерация пляжных видов спорта Республики Марий Эл",
-  "start_url": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f6f3",
   "theme_color": "#142a2b",
@@ -12,13 +13,13 @@
       "src": "images/logo.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "images/logo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
