@@ -87,3 +87,13 @@ async function startSite() {
 startSite().catch((error) => {
   console.error("Не удалось инициализировать сайт ФПВС РМЭ:", error);
 });
+
+// Регистрация Service Worker для PWA
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then((reg) => console.log("SW зарегистрирован:", reg.scope))
+      .catch((err) => console.warn("SW не зарегистрирован:", err));
+  });
+}
