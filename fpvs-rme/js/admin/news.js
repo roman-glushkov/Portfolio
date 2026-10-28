@@ -1,4 +1,5 @@
 import { config, db, Query, storage, ID } from "./appwrite-client.js";
+import { modalOpened, modalClosed } from "../core/modals.js";
 
 let allNews = [];
 let currentNewsId = null;
@@ -14,16 +15,31 @@ export function initNews() {
 
   openBtn.addEventListener("click", () => {
     modal.classList.add("open");
+    modalOpened("news");
     loadNewsList();
   });
 
   closeBtns.forEach((btn) =>
     btn.addEventListener("click", () => {
       modal.classList.remove("open");
+      modalClosed("news");
     })
   );
 
   getElement("addNewsBtn")?.addEventListener("click", () => openEditor(null));
+}
+
+export function closeNewsModal() {
+  const modal = getElement("newsModal");
+  if (!modal || !modal.classList.contains("open")) return;
+  modal.classList.remove("open");
+  modalClosed("news");
+}
+
+export function isNewsOpen() {
+  return (
+    document.getElementById("newsModal")?.classList.contains("open") || false
+  );
 }
 
 async function loadNewsList() {
@@ -31,7 +47,6 @@ async function loadNewsList() {
   list.innerHTML = '<div class="brackets-hint">Загрузка...</div>';
 
   try {
-    // Берем все новости
     const res = await db.listDocuments(config.databaseId, "news", [
       Query.orderDesc("date"),
       Query.limit(100),
@@ -70,13 +85,9 @@ function openEditor(id) {
   const editor = getElement("newsEditor");
   const news = id ? allNews.find((n) => n.$id === id) : null;
 
-  // Подсветка в списке
   document.querySelectorAll(".news-item").forEach((el) => {
     el.classList.toggle("active", el.dataset.newsId === id);
   });
-
-  // Состояние: какие фото удалены
-  let deletedGalleryIds = [];
 
   editor.innerHTML = `
         <form class="news-form" id="newsForm">
@@ -135,12 +146,12 @@ function openEditor(id) {
                       news && news.gallery
                         ? news.gallery
                             .map(
-                              (fileId, index) =>
-                                `<div class="preview-item" data-id="${fileId}" style="position: relative;">
+                              (id) =>
+                                `<div class="preview-item" data-id="${id}" style="position: relative;">
                                   <img class="news-image-preview" src="${getFileUrl(
-                                    fileId
+                                    id
                                   )}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;" />
-                                  <button type="button" class="remove-photo-btn" data-id="${fileId}" style="position: absolute; top: -5px; right: -5px; background: #d84343; color: #fff; border: 0; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: grid; place-items: center;">✕</button>
+                                  <button type="button" class="remove-photo-btn" data-id="${id}" style="position: absolute; top: -5px; right: -5px; background: #d84343; color: #fff; border: 0; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: grid; place-items: center;">✕</button>
                                 </div>`
                             )
                             .join("")
@@ -161,13 +172,13 @@ function openEditor(id) {
     `;
 
   // Обработчик удаления фото
+  let deletedGalleryIds = [];
   editor.querySelectorAll(".remove-photo-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const fileId = btn.dataset.id;
-      deletedGalleryIds.push(fileId); // Запоминаем, что это фото нужно удалить
+      deletedGalleryIds.push(fileId);
 
-      // Удаляем превью из DOM
       const previewItem = btn.closest(".preview-item");
       if (previewItem) previewItem.remove();
     });
@@ -183,7 +194,7 @@ function openEditor(id) {
     );
   }
 
-  // Обработка выбора новых файлов (как было)
+  // Обработка выбора новых файлов
   const fileInput = getElement("nfImages");
   const uploadWrapper = getElement("fileUploadWrapper");
   const uploadText = getElement("fileUploadText");
@@ -213,7 +224,6 @@ function openEditor(id) {
         uploadText.textContent =
           "Нажмите, чтобы загрузить фото (можно несколько)";
         uploadWrapper.classList.remove("has-file");
-        // Не очищаем старые превью, если это редактирование
       }
     });
   }
@@ -242,7 +252,6 @@ async function saveNews(e, existingNews, deletedGalleryIds = []) {
       for (const fileId of deletedGalleryIds) {
         await storage.deleteFile("news-images", fileId).catch(() => {});
       }
-      // Убираем удаленные ID из массива gallery
       gallery = gallery.filter((id) => !deletedGalleryIds.includes(id));
     }
 
@@ -303,9 +312,10 @@ async function deleteNews(news) {
   if (!confirm(`Удалить новость "${news.title}"?`)) return;
 
   try {
-    // Удаляем фото из Storage, если оно есть
-    if (news.imageId) {
-      await storage.deleteFile("news-images", news.imageId).catch(() => {});
+    if (news.gallery) {
+      for (const fileId of news.gallery) {
+        await storage.deleteFile("news-images", fileId).catch(() => {});
+      }
     }
     await db.deleteDocument(config.databaseId, "news", news.$id);
     await loadNewsList();
@@ -332,7 +342,6 @@ function compressImage(file, maxWidth, quality) {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(
           (blob) => {
-            // Возвращаем File (чтобы Appwrite понимал)
             const compressedFile = new File([blob], file.name, {
               type: "image/jpeg",
             });

@@ -5,8 +5,14 @@ import { initStatsControls, initStatsSlider, loadStats } from "./stats.js";
 import { initLeadModal } from "./lead-modal.js";
 import { loadLeads } from "./leads.js";
 import { config, db, Query } from "./appwrite-client.js";
-import { initBrackets } from "./brackets.js"; // <--- ДОБАВЛЕНО
-import { initNews } from "./news.js";
+import { initBrackets } from "./brackets.js";
+import { initNews, closeNewsModal, isNewsOpen } from "./news.js";
+import {
+  initTournaments,
+  closeTournamentsModal,
+  isTournamentsOpen,
+} from "./tournaments-editor.js";
+import { registerModal } from "../core/modals.js";
 
 async function loadNewsStats() {
   const wrap = document.getElementById("newsStatsWrap");
@@ -73,10 +79,23 @@ initStatsControls();
 initStatsSlider();
 initLeadModal();
 initBrackets();
-initNews(); // <--- ДОБАВЛЕНО (запускает логику сеток)
+initNews();
+initTournaments();
+
+// Регистрируем модалки для Esc и кнопки "Назад"
+registerModal("news", closeNewsModal, isNewsOpen);
+registerModal("tournaments", closeTournamentsModal, isTournamentsOpen);
 
 initAuth(() => {
   loadStats();
   loadLeads();
   loadNewsStats();
+});
+
+// Esc закрывает открытую модалку (в админке)
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  if (isNewsOpen()) return closeNewsModal();
+  if (isTournamentsOpen()) return closeTournamentsModal();
 });

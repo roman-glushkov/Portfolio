@@ -1,0 +1,262 @@
+/* ================================================================
+ *  УПРАВЛЕНИЕ ТУРНИРАМИ
+ * ================================================================ */
+
+.tournaments-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(10, 24, 25, 0.76);
+  backdrop-filter: blur(8px);
+}
+
+.tournaments-modal.open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tournaments-modal__card {
+  position: relative;
+  width: min(1240px, 100%);
+  height: min(850px, 92vh);
+  background: #f5f7f5;
+  border-radius: 20px;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.tournaments-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #e3e8e5;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.tournaments-modal__close:hover {
+  background: #ed7438;
+  color: #fff;
+}
+
+.tournaments-layout {
+  display: flex;
+  height: 100%;
+}
+
+/* Левая панель */
+.tournaments-sidebar {
+  width: 340px;
+  background: #fff;
+  border-right: 1px solid #e6ebe8;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+}
+
+.tournaments-sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-right: 40px;
+}
+
+.tournaments-sidebar__header h2 {
+  font: 800 18px Manrope, sans-serif;
+  margin: 0;
+}
+
+.btn-add-tournament {
+  background: #2d7764;
+  color: #fff;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-add-tournament:hover {
+  background: #1e5c4c;
+}
+
+.tournaments-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tournament-item {
+  padding: 12px;
+  border: 1px solid #e4e8e5;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tournament-item:hover {
+  background: #f9fbf9;
+  border-color: #2d7764;
+}
+
+.tournament-item.active {
+  background: #eaf4ed;
+  border-color: #2d7764;
+}
+
+.tournament-item__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #142a2b;
+  margin-bottom: 4px;
+}
+
+.tournament-item__date {
+  font-size: 11px;
+  color: #89938f;
+}
+
+/* Правая панель (редактор) */
+.tournaments-editor {
+  flex: 1;
+  background: #f5f7f5;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.tournaments-welcome {
+  margin: auto;
+  max-width: 400px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.tournaments-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tournaments-form label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #65736e;
+  margin-bottom: 6px;
+}
+
+.tournaments-form input,
+.tournaments-form textarea,
+.tournaments-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dfe6e1;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.tournaments-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.tournaments-form input:focus,
+.tournaments-form textarea:focus,
+.tournaments-form select:focus {
+  border-color: #2d7764;
+}
+
+.tournaments-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn-save {
+  background: #2d7764;
+  color: #fff;
+  border: 0;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #d84343;
+  color: #fff;
+  border: 0;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: auto;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 760px) {
+  .tournaments-modal {
+    padding: 8px;
+  }
+  .tournaments-modal__card {
+    height: 94vh;
+    border-radius: 15px;
+  }
+  .tournaments-layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .tournaments-sidebar {
+    width: 100%;
+    max-height: 200px;
+    flex: 0 0 auto;
+    border-right: 0;
+    border-bottom: 1px solid #e6ebe8;
+    padding: 16px;
+  }
+  .tournaments-editor {
+    flex: 1;
+    padding: 16px;
+  }
+  .tournaments-form {
+    padding: 16px;
+    gap: 12px;
+  }
+  .tournaments-form h2 {
+    font-size: 18px;
+  }
+  .tournaments-form-actions {
+    flex-direction: column-reverse;
+  }
+  .btn-save,
+  .btn-delete {
+    width: 100%;
+    padding: 14px;
+  }
+  .btn-delete {
+    margin-right: 0;
+  }
+}

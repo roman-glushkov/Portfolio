@@ -37,7 +37,6 @@
         <div class="user" id="userInfo"></div>
       </div>
       <div style="display: flex; gap: 10px">
-        <!-- НОВАЯ КНОПКА ДЛЯ НОВОСТЕЙ -->
         <button
           class="logout"
           id="openNewsBtn"
@@ -45,7 +44,13 @@
         >
           Новости
         </button>
-
+        <button
+          class="logout"
+          id="openTournamentsBtn"
+          style="background: #2d7764; color: #fff; border-color: #2d7764"
+        >
+          Турниры
+        </button>
         <button
           class="logout"
           id="openBracketsBtn"
@@ -298,6 +303,41 @@
         <div class="news-welcome">
           <h3>Выберите новость</h3>
           <p>Или нажмите «+ Добавить», чтобы создать новую.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ========== МОДАЛКА РЕДАКТОРА ТУРНИРОВ ========== -->
+<div class="tournaments-modal" id="tournamentsModal">
+  <div class="tournaments-modal__backdrop" data-tournaments-close></div>
+  <div class="tournaments-modal__card">
+    <button
+      class="tournaments-modal__close"
+      type="button"
+      data-tournaments-close
+    >
+      ✕
+    </button>
+
+    <div class="tournaments-layout">
+      <aside class="tournaments-sidebar">
+        <div class="tournaments-sidebar__header">
+          <h2>Турниры</h2>
+          <button id="addTournamentBtn" class="btn-add-tournament">
+            + Добавить
+          </button>
+        </div>
+        <div class="tournaments-list" id="tournamentsList">
+          <div class="brackets-hint">Загрузка...</div>
+        </div>
+      </aside>
+
+      <main class="tournaments-editor" id="tournamentsEditor">
+        <div class="tournaments-welcome">
+          <h3>Выберите турнир</h3>
+          <p>Или нажмите «+ Добавить», чтобы создать новый.</p>
         </div>
       </main>
     </div>
