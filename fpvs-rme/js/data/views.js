@@ -30,13 +30,13 @@
     let id = null;
     try {
       id = localStorage.getItem(VISITOR_KEY);
-    } catch (e) {}
+    } catch (e) { }
 
     if (!id) {
       id = randomId(12);
       try {
         localStorage.setItem(VISITOR_KEY, id);
-      } catch (e) {}
+      } catch (e) { }
     }
     return id;
   }
@@ -113,11 +113,14 @@
 
     const visitorId = getVisitorId();
     const date = getToday();
-    const documentId = `${newsSlug}_${visitorId}`; // Уникальный ID, чтобы не накручивать
 
-    const url = `${config.endpoint.replace(/\/+$/, "")}/tablesdb/${
-      config.databaseId
-    }/tables/news_views/rows`;
+    // Генерируем короткий documentId (максимум 36 символов)
+    // Берем первые 15 символов от slug и добавляем visitorId
+    const shortSlug = newsSlug.substring(0, 15);
+    const documentId = `${shortSlug}_${visitorId}`;
+
+    const url = `${config.endpoint.replace(/\/+$/, "")}/tablesdb/${config.databaseId
+      }/tables/news_views/rows`;
 
     try {
       const res = await fetch(url, {
@@ -134,6 +137,11 @@
 
       if (res.status === 201) {
         console.log("[views] Новость прочитана:", newsSlug);
+      } else if (res.status === 409) {
+        // Если запись уже есть (409 Conflict) — это нормально, просто игнорируем
+        console.log("[views] Вы уже читали эту новость сегодня");
+      } else {
+        console.warn("[views] Ошибка записи прочтения, статус:", res.status);
       }
     } catch (e) {
       console.warn("[views] Ошибка записи прочтения:", e.message);
